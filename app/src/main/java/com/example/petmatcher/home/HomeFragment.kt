@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.navigation.findNavController
 import com.example.petmatcher.R
 
 /**
@@ -23,6 +24,11 @@ class HomeFragment : Fragment() {
 
     private var listener: OnFragmentInteractionListener? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +36,10 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val petCard: CardView = view.findViewById(R.id.pet_card)
+
+        petCard.setOnClickListener {
+            it.findNavController().navigate(R.id.detailsFragment)
+        }
 
         return view
     }

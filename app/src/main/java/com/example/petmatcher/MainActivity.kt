@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.petmatcher.favorites.FavoritesFragment
 import com.example.petmatcher.home.HomeFragment
 import com.example.petmatcher.info.InfoFragment
+import com.example.petmatcher.petdetails.DetailsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
@@ -18,7 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  */
 class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
     InfoFragment.OnFragmentInteractionListener,
-    FavoritesFragment.OnFragmentInteractionListener {
+    FavoritesFragment.OnFragmentInteractionListener,
+    DetailsFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented")
     }

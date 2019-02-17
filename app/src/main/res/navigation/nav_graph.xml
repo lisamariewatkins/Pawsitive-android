@@ -5,9 +5,14 @@
             app:startDestination="@id/homeFragment">
 
     <fragment android:id="@+id/homeFragment" android:name="com.example.petmatcher.home.HomeFragment"
-              android:label="fragment_home" tools:layout="@layout/fragment_home"/>
+              android:label="fragment_home" tools:layout="@layout/fragment_home">
+        <action android:id="@+id/action_homeFragment_to_detailsFragment" app:destination="@id/detailsFragment"
+                app:launchSingleTop="true"/>
+    </fragment>
     <fragment android:id="@+id/infoFragment" android:name="com.example.petmatcher.info.InfoFragment"
               android:label="fragment_info" tools:layout="@layout/fragment_info"/>
     <fragment android:id="@+id/favoritesFragment" android:name="com.example.petmatcher.favorites.FavoritesFragment"
               android:label="fragment_favorites" tools:layout="@layout/fragment_favorites"/>
+    <fragment android:id="@+id/detailsFragment" android:name="com.example.petmatcher.petdetails.DetailsFragment"
+              android:label="fragment_details" tools:layout="@layout/fragment_details"/>
 </navigation>
