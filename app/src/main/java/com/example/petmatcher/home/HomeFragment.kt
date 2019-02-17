@@ -1,38 +1,37 @@
-package com.example.petmatcher
+package com.example.petmatcher.home
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-
-
-
+import android.widget.Toast
+import androidx.cardview.widget.CardView
+import com.example.petmatcher.R
 
 /**
- * @author Lisa Watkins
- *
+ * Home screen of the app and start fragment in the navigation graph. Hosts the pet cards that a user can swipe.
  */
-class InfoFragment : Fragment() {
+class HomeFragment : Fragment() {
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val petCard: CardView = view.findViewById(R.id.pet_card)
+
+        return view
     }
 
     override fun onAttach(context: Context) {

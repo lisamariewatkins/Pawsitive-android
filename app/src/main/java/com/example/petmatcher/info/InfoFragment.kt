@@ -1,4 +1,4 @@
-package com.example.petmatcher
+package com.example.petmatcher.info
 
 import android.content.Context
 import android.net.Uri
@@ -7,13 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.petmatcher.R
 
 
 /**
  * @author Lisa Watkins
+ *
  */
-class FavoritesFragment : Fragment() {
+class InfoFragment : Fragment() {
     interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -28,7 +31,7 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
+        return inflater.inflate(R.layout.fragment_info, container, false)
     }
 
     override fun onAttach(context: Context) {

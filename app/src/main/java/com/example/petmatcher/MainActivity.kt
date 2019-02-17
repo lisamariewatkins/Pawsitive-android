@@ -2,11 +2,13 @@ package com.example.petmatcher
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.petmatcher.favorites.FavoritesFragment
+import com.example.petmatcher.home.HomeFragment
+import com.example.petmatcher.info.InfoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
