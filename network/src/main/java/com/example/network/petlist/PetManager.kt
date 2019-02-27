@@ -7,14 +7,14 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface PetManager {
-    @GET
-    fun getPetList(@Query("location") location: String): Call<PetRecordList>
+    @GET("pet.find")
+    fun getPetList(@Query("location") location: String): Call<JsonResponse>
 }
 
 class PetManagerImpl: PetManager {
-    val retrofitInstance = RetrofitFactory.retrofit().create(PetManager::class.java)
+    private val retrofitInstance = RetrofitFactory.retrofit().create(PetManager::class.java)
 
-    override fun getPetList(location: String): Call<PetRecordList> {
+    override fun getPetList(location: String): Call<JsonResponse> {
         return retrofitInstance.getPetList(location)
     }
 
