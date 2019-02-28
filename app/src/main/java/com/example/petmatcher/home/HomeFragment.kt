@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.example.petmatcher.R
 
@@ -23,10 +24,12 @@ class HomeFragment : Fragment() {
     }
 
     private var listener: OnFragmentInteractionListener? = null
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -38,7 +41,9 @@ class HomeFragment : Fragment() {
         val petCard: CardView = view.findViewById(R.id.pet_card)
 
         petCard.setOnClickListener {
-            it.findNavController().navigate(R.id.detailsFragment)
+            // it.findNavController().navigate(R.id.detailsFragment)
+            val petName = viewModel.getPet().value?.name?.value
+            Toast.makeText(context, petName ?: "name null", Toast.LENGTH_LONG).show()
         }
 
         return view
