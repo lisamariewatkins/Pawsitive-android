@@ -5,13 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.network.petlist.JsonResponse
 import com.example.network.petlist.Pet
+import com.example.network.petlist.PetManager
 import com.example.network.petlist.PetManagerImpl
 import retrofit2.Response
+import javax.inject.Inject
 
 /*
 * Handles all data operations for adoptable pets, abstracting these operations from the rest of the app.
 */
-class PetRepository {
+class PetRepository @Inject constructor() {
+    @Inject
+    lateinit var petManager: PetManager
+
     // todo make a better in mem cache
     private var petList = ArrayList<Pet>()
 
@@ -35,17 +40,17 @@ class PetRepository {
     * Retrieve list of pets from the network
     */
     fun getPets() {
-        PetTask(petList).execute()
+        PetTask(petList, petManager).execute()
     }
 
     // todo maybe coroutines instead
     /*
     * Request list of pets on background thread
     */
-    private class PetTask(val petList: ArrayList<Pet>): AsyncTask<Void, Void, Response<JsonResponse>>() {
+    private class PetTask(val petList: ArrayList<Pet>, val petManager: PetManager): AsyncTask<Void, Void, Response<JsonResponse>>() {
         override fun doInBackground(vararg params: Void?): Response<JsonResponse> {
-            // todo dagger
-            return PetManagerImpl().getPetList("78701").execute()
+            // todo location awareness
+            return petManager.getPetList("78701").execute()
         }
 
         override fun onPostExecute(result: Response<JsonResponse>?) {

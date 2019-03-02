@@ -1,29 +1,28 @@
 package com.example.petmatcher
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.petmatcher.favorites.FavoritesFragment
-import com.example.petmatcher.home.HomeFragment
-import com.example.petmatcher.info.InfoFragment
-import com.example.petmatcher.petdetails.DetailsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.AndroidInjection
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.support.HasSupportFragmentInjector
+import javax.inject.Inject
 
 /**
  * @author Lisa Watkins
  *
  * Main activity that hosts navigation graph
  */
-class MainActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
-    InfoFragment.OnFragmentInteractionListener,
-    FavoritesFragment.OnFragmentInteractionListener,
-    DetailsFragment.OnFragmentInteractionListener {
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented")
-    }
+class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector() = dispatchingAndroidInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

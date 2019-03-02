@@ -17,5 +17,4 @@ class PetManagerImpl: PetManager {
     override fun getPetList(location: String): Call<JsonResponse> {
         return retrofitInstance.getPetList(location)
     }
-
 }
