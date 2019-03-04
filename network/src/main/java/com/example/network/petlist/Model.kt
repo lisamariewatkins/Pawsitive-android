@@ -16,6 +16,7 @@ data class Pet(
                @field:Json(name = "contact") val contact: Contact,
                @field:Json(name = "age") val age: KeyValuePair,
                @field:Json(name = "size") val size: KeyValuePair,
+               @field:Json(name = "media") val media: Photos,
                @field:Json(name = "id") val id: KeyValuePair,
                @field:Json(name = "name") val name: KeyValuePair,
                @field:Json(name = "sex") val sex: KeyValuePair,
@@ -26,6 +27,14 @@ data class Pet(
                @field:Json(name = "animal") val animal: KeyValuePair)
 
 data class Options(@field:Json(name = "option") val status: List<KeyValuePair>) // todo fix this
+
+data class Photos(@field:Json(name = "photos") val photos: PhotoList)
+
+data class PhotoList(@field:Json(name= "photo") val photoList: List<PhotoInfo>)
+
+data class PhotoInfo(@field:Json(name = "@size") val size: String,
+                     @field:Json(name = "\$t") val url: String,
+                     @field:Json(name = "@id") val id: String)
 
 data class Contact(@field:Json(name = "phone") val phone: KeyValuePair,
                    @field:Json(name = "state") val state: KeyValuePair,

@@ -20,7 +20,7 @@ class PetRepository @Inject constructor() {
     // todo make a better in mem cache
     private var petList = ArrayList<Pet>()
 
-    fun getNextPet(): LiveData<Pet> {
+    fun getNextPet(): Pet? {
         // todo fix paging
         if (petList.isEmpty()) {
             getPets()
@@ -30,10 +30,10 @@ class PetRepository @Inject constructor() {
 
         // todo use a better data structure
         if (petList.size > 0) {
-            data.value = petList.removeAt(0)
+            return petList.removeAt(0)
+        } else {
+            return null
         }
-
-        return data
     }
 
     /*
