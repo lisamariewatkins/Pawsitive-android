@@ -1,6 +1,7 @@
 package com.example.network
 
 import com.example.network.secret.Key
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -36,6 +37,7 @@ class RetrofitFactory {
 
         fun retrofit(): Retrofit {
             return Retrofit.Builder()
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .baseUrl(BASE_URL)
                 .client(okHttpClient.build())
                 .addConverterFactory(MoshiConverterFactory.create())

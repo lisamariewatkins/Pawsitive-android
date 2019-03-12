@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -16,6 +17,8 @@ import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
 import javax.inject.Inject
 import com.bumptech.glide.request.RequestOptions
+import com.example.petmatcher.PetRepository
+import com.example.petmatcher.favorites.FavoritesRepository
 
 /**
  * Home screen of the app and start fragment in the navigation graph. Hosts the pet cards that a user can swipe.
@@ -23,10 +26,10 @@ import com.bumptech.glide.request.RequestOptions
 class HomeFragment: Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var favoritesRepository: FavoritesRepository
 
     private lateinit var viewModel: HomeViewModel
-
-    private var imageUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +39,7 @@ class HomeFragment: Fragment(), Injectable {
         val petImage: ImageView = view.findViewById(R.id.pet_image)
         val petNameTextView: TextView = view.findViewById(R.id.pet_name)
         val petDescriptionTextView: TextView = view.findViewById(R.id.pet_description)
+        val matchButton: Button = view.findViewById(R.id.match_button)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
 
@@ -50,6 +54,12 @@ class HomeFragment: Fragment(), Injectable {
 
         petImage.setOnClickListener {
             viewModel.nextPet()
+        }
+
+        matchButton.setOnClickListener {
+            viewModel.currentPet.value?.let {
+                favoritesRepository.addToFavorites(it)
+            }
         }
 
         return view
