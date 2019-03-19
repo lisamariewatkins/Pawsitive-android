@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.network.petlist.Pet
 import com.example.petmatcher.R
+import com.example.petmatcher.data.Favorite
 import kotlinx.android.synthetic.main.favorites_list_item.view.*
 
-class FavoritesListAdapter(private val data: List<Pet>): RecyclerView.Adapter<FavoritesListAdapter.FavoritesViewHolder>() {
+class FavoritesListAdapter(private val data: List<Favorite>): RecyclerView.Adapter<FavoritesListAdapter.FavoritesViewHolder>() {
 
     class FavoritesViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
 
@@ -24,7 +24,7 @@ class FavoritesListAdapter(private val data: List<Pet>): RecyclerView.Adapter<Fa
     }
 
     override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
-        holder.view.favorite_name.text = data[position].name.value
-        holder.view.favorite_breed.text = data[position].animal.value
+        holder.view.favorite_name.text = data[position].name
+        holder.view.favorite_breed.text = data[position].breed
     }
 }

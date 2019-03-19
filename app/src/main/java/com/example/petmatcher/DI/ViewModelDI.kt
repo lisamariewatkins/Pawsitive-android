@@ -2,6 +2,7 @@ package com.example.petmatcher.DI
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.petmatcher.favorites.FavoritesViewModel
 import com.example.petmatcher.home.HomeViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -44,4 +45,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     internal abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavoritesViewModel::class)
+    internal abstract fun bindFavoritesModel(viewModel: FavoritesViewModel): ViewModel
 }

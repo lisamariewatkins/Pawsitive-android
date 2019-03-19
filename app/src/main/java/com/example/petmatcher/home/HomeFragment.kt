@@ -28,8 +28,6 @@ import org.w3c.dom.Text
 class HomeFragment: Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var favoritesRepository: FavoritesRepository
 
     private lateinit var viewModel: HomeViewModel
 
@@ -59,15 +57,11 @@ class HomeFragment: Fragment(), Injectable {
 
         matchButton.setOnClickListener {
             viewModel.currentPet.value?.let {
-                favoritesRepository.addToFavorites(it)
+                viewModel.addPetToFavorites(it)
             }
         }
 
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     private fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
