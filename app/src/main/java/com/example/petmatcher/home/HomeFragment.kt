@@ -17,8 +17,10 @@ import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
 import javax.inject.Inject
 import com.bumptech.glide.request.RequestOptions
+import com.example.network.petlist.Pet
 import com.example.petmatcher.PetRepository
 import com.example.petmatcher.favorites.FavoritesRepository
+import org.w3c.dom.Text
 
 /**
  * Home screen of the app and start fragment in the navigation graph. Hosts the pet cards that a user can swipe.
@@ -43,13 +45,12 @@ class HomeFragment: Fragment(), Injectable {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
 
+        viewModel.currentPet.value?.let {
+            showPet(it, petNameTextView, petDescriptionTextView, petImage)
+        }
+
         viewModel.currentPet.observe(viewLifecycleOwner, Observer { pet ->
-            val petName = pet?.name?.value
-            val petDescription = pet?.description?.value
-            val imageUrl = pet?.media?.photos?.photoList?.get(3)?.url
-            petNameTextView.text = petName
-            petDescriptionTextView.text = petDescription
-            loadImage(petImage, imageUrl)
+            showPet(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
         petImage.setOnClickListener {
@@ -63,6 +64,19 @@ class HomeFragment: Fragment(), Injectable {
         }
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    private fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
+        val petName = pet?.name?.value
+        val petDescription = pet?.description?.value
+        val imageUrl = pet?.media?.photos?.photoList?.get(3)?.url
+        petNameTextView.text = petName
+        petDescriptionTextView.text = petDescription
+        loadImage(petImage, imageUrl)
     }
 
     // todo move this

@@ -7,10 +7,12 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Handles all data operations for adoptable pets, abstracting these operations from the rest of the app.
  */
+@Singleton
 class PetRepository @Inject constructor() {
     @Inject
     lateinit var petManager: PetManager
