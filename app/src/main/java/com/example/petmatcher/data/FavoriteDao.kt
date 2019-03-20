@@ -11,6 +11,6 @@ interface FavoriteDao {
     @Query("SELECT * FROM $favoritesTableName")
     fun getFavorites(): LiveData<List<Favorite>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(favorite: Favorite)
 }
