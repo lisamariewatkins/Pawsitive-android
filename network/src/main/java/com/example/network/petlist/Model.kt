@@ -6,7 +6,8 @@ import com.squareup.moshi.Json
 data class JsonResponse(@field:Json(name = "@version") val version: String,
                         @field:Json(name = "petfinder") val petFinder: PetFinder)
 
-data class PetFinder(@field:Json(name = "pets") val pets: PetObject)
+data class PetFinder(@field:Json(name = "lastOffset") val lastOffset: KeyValuePair,
+                    @field:Json(name = "pets") val pets: PetObject)
 
 data class PetObject(@field:Json(name = "pet") val pet: List<Pet>)
 

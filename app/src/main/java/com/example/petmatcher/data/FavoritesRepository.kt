@@ -1,4 +1,4 @@
-package com.example.petmatcher.favorites
+package com.example.petmatcher.data
 
 import com.example.network.petlist.Pet
 import com.example.petmatcher.data.Favorite
@@ -16,7 +16,8 @@ class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteD
             newPet.name.value,
             newPet.description.value,
             newPet.animal.value,
-            newPet.media.photos.photoList[3].url)
+            newPet.media.photos?.photoList?.get(3)?.url!! // todo fix this
+        )
 
         withContext(IO) {
             favoriteDao.insert(favorite)
@@ -24,4 +25,6 @@ class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteD
     }
 
     fun getFavoritesList() = favoriteDao.getFavorites()
+
+    fun getFavorite(id: String) = favoriteDao.getFavorite(id)
 }

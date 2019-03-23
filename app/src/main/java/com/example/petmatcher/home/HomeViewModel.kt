@@ -1,11 +1,10 @@
 package com.example.petmatcher.home
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.network.petlist.Pet
 import com.example.petmatcher.PetRepository
-import com.example.petmatcher.favorites.FavoritesRepository
+import com.example.petmatcher.data.FavoritesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -15,15 +14,22 @@ import javax.inject.Inject
  * ViewModel for HomeFragment
  */
 class HomeViewModel @Inject constructor(private val repository: PetRepository,
-                                        private val favoritesRepository: FavoritesRepository): ViewModel() {
-    val currentPet: MutableLiveData<Pet> = MutableLiveData()
+                                        private val favoritesRepository: FavoritesRepository
+): ViewModel() {
+
+    val petList = repository.petList
+
+    val currentPet = repository.currentPet
 
     fun nextPet() {
-        // todo fix paging
-        if (repository.petList.isEmpty()) {
-            repository.getPets()
-        } else {
-            currentPet.value = repository.petList.removeAt(0)
+        viewModelScope.launch {
+            repository.getNextPet()
+        }
+    }
+
+    fun addPetToFavorites(newPet: Pet) {
+        viewModelScope.launch {
+            favoritesRepository.addToFavorites(newPet)
         }
     }
 
@@ -31,11 +37,5 @@ class HomeViewModel @Inject constructor(private val repository: PetRepository,
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
-    }
-
-    fun addPetToFavorites(newPet: Pet) {
-        viewModelScope.launch {
-            favoritesRepository.addToFavorites(newPet)
-        }
     }
 }

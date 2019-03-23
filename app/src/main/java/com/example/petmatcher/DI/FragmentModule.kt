@@ -2,6 +2,8 @@ package com.example.petmatcher.DI
 
 import com.example.petmatcher.favorites.FavoritesFragment
 import com.example.petmatcher.home.HomeFragment
+import com.example.petmatcher.petdetails.DetailsFragment
+import com.example.petmatcher.petdetails.DetailsFragmentArgs
 import com.example.petmatcher.search.SearchFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -19,4 +21,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributesInfoFragment(): SearchFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributesDetailFragment(): DetailsFragment
 }

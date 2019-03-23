@@ -1,7 +1,6 @@
 package com.example.petmatcher.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,16 +17,25 @@ import com.example.petmatcher.R
 import javax.inject.Inject
 import com.bumptech.glide.request.RequestOptions
 import com.example.network.petlist.Pet
-import com.example.petmatcher.PetRepository
-import com.example.petmatcher.favorites.FavoritesRepository
-import org.w3c.dom.Text
+import com.example.petmatcher.memorycache.ImageCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Home screen of the app and start fragment in the navigation graph. Hosts the pet cards that a user can swipe.
  */
-class HomeFragment: Fragment(), Injectable {
+class HomeFragment: Fragment(), Injectable, CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var imageCache: ImageCache // todo move this
 
     private lateinit var viewModel: HomeViewModel
 
@@ -51,6 +59,14 @@ class HomeFragment: Fragment(), Injectable {
             showPet(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
+        viewModel.petList.observe(viewLifecycleOwner, Observer { petList ->
+            launch {
+                withContext(IO) {
+                    imageCache.cacheImages(context, petList)
+                }
+            }
+        })
+
         petImage.setOnClickListener {
             viewModel.nextPet()
         }
@@ -65,21 +81,27 @@ class HomeFragment: Fragment(), Injectable {
     }
 
     private fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
-        val petName = pet?.name?.value
-        val petDescription = pet?.description?.value
-        val imageUrl = pet?.media?.photos?.photoList?.get(3)?.url
+        val petName = pet.name.value
+        val petDescription = pet.description.value
+        val imageUrl = pet.media.photos.photoList[3].url
+
         petNameTextView.text = petName
         petDescriptionTextView.text = petDescription
-        loadImage(petImage, imageUrl)
+
+        loadImage(petImage, imageUrl, pet.id.value)
     }
 
     // todo move this
-    private fun loadImage(petImage: ImageView, imageUrl: String?) {
-        val options = RequestOptions()
-            .centerCrop()
-            .placeholder(R.drawable.ic_placeholder_image) // todo find a placeholder asset
-            .error(R.drawable.ic_placeholder_image)
+    private fun loadImage(petImage: ImageView, imageUrl: String?, id: String) {
+        imageCache.getImage(id)?.let {
+            petImage.setImageDrawable(it)
+        } ?: run {
+            val options = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_placeholder_image) // todo find a placeholder asset
+                .error(R.drawable.ic_placeholder_image)
 
-        Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)
+            Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)
+        }
     }
 }

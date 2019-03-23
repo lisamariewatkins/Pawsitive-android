@@ -11,7 +11,7 @@ data class Favorite(
     val name: String,
     val description: String,
     val breed: String,
-    val imageUrl: String
+    val imageUrl: String = ""
 ) {
     override fun toString() = name
 }

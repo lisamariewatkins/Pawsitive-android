@@ -3,6 +3,7 @@ package com.example.petmatcher.favorites
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +19,20 @@ class FavoritesListAdapter: ListAdapter<Favorite, FavoritesListAdapter.Favorites
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.favorites_list_item, parent, false) as ConstraintLayout
+
         return FavoritesViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
         holder.view.favorite_name.text = getItem(position).name
         holder.view.favorite_breed.text = getItem(position).breed
+
+        val petId = getItem(position).petId
+        val detailsAction = FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(petId)
+
+        holder.view.setOnClickListener {
+            it.findNavController().navigate(detailsAction)
+        }
     }
 }
 

@@ -29,6 +29,7 @@ android {
 }
 
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 dependencies {
     implementation project(":network")

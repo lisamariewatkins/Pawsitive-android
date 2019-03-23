@@ -9,13 +9,13 @@ import retrofit2.http.Query
 
 interface PetManager {
     @GET("pet.find")
-    fun getPetList(@Query("location") location: String): Deferred<JsonResponse>
+    fun getPetListAsync(@Query("location") location: String, @Query("offset") offset: String?): Deferred<JsonResponse>
 }
 
 class PetManagerImpl: PetManager {
     private val retrofitInstance = RetrofitFactory.retrofit().create(PetManager::class.java)
 
-    override fun getPetList(location: String): Deferred<JsonResponse> {
-        return retrofitInstance.getPetList(location)
+    override fun getPetListAsync(location: String, offset: String?): Deferred<JsonResponse> {
+        return retrofitInstance.getPetListAsync(location, offset)
     }
 }
