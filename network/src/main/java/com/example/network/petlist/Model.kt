@@ -29,7 +29,7 @@ data class Pet(
 
 data class Options(@field:Json(name = "option") val status: List<KeyValuePair>) // todo fix this
 
-data class Photos(@field:Json(name = "photos") val photos: PhotoList)
+data class Photos(@field:Json(name = "photos") val photos: PhotoList?)
 
 data class PhotoList(@field:Json(name= "photo") val photoList: List<PhotoInfo>)
 

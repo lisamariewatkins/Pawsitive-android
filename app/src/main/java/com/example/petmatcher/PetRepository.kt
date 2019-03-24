@@ -29,7 +29,6 @@ class PetRepository @Inject constructor() {
     private var offset: String? = null
 
     suspend fun getNextPet(): LiveData<Pet>? {
-        // todo paging
         petList.value?.let {
             if (it.isEmpty()) {
                 getPets()

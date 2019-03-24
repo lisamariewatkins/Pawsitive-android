@@ -83,12 +83,13 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
     private fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
         val petName = pet.name.value
         val petDescription = pet.description.value
-        val imageUrl = pet.media.photos.photoList[3].url
+        pet.media.photos?.let {
+            val imageUrl = it.photoList[3].url
+            loadImage(petImage, imageUrl, pet.id.value)
+        }
 
         petNameTextView.text = petName
         petDescriptionTextView.text = petDescription
-
-        loadImage(petImage, imageUrl, pet.id.value)
     }
 
     // todo move this

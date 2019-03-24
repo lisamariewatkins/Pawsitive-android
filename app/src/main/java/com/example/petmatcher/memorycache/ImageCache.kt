@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-const val CACHE_SIZE = 50
+const val CACHE_SIZE = 25
 /**
  * In memory cache of pet images
  */
@@ -27,17 +27,21 @@ class ImageCache @Inject constructor() {
         withContext(IO) {
             context?.let {
                 pets.forEach { pet ->
-                    Glide.with(context)
-                        .load(pet.media.photos.photoList[3].url)
-                        .into(object: CustomTarget<Drawable>(){
-                            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                                cache.put(pet.id.value, resource)
-                            }
+                    val photos = pet.media.photos
+                    if (photos != null) {
+                        Glide.with(context)
+                            .load(photos.photoList[3].url)
+                            .into(object: CustomTarget<Drawable>(){
+                                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                                    cache.put(pet.id.value, resource)
+                                }
 
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                            }
-                        })
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+                            })
+                    }
+
                 }
             }
         }
