@@ -59,14 +59,6 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
             showPet(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
-        viewModel.petList.observe(viewLifecycleOwner, Observer { petList ->
-            launch {
-                withContext(IO) {
-                    imageCache.cacheImages(context, petList)
-                }
-            }
-        })
-
         petImage.setOnClickListener {
             viewModel.nextPet()
         }

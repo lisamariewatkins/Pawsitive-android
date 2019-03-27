@@ -1,6 +1,7 @@
 package com.example.petmatcher.DI
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.network.petlist.PetManager
 import com.example.network.petlist.PetManagerImpl
@@ -35,6 +36,12 @@ interface ApplicationComponent {
     ViewModelModule::class
 ])
 class ApplicationModule {
+    @Singleton
+    @Provides
+    fun providesContext(application: Application): Context {
+        return application
+    }
+
     @Singleton
     @Provides
     fun providesPetManager(): PetManager {
