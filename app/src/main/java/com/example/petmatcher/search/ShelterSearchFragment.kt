@@ -1,4 +1,4 @@
-package com.example.petmatcher.favorites
+package com.example.petmatcher.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,21 +11,23 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.network.shelter.Shelter
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
-import com.example.petmatcher.data.Favorite
 import javax.inject.Inject
 
 
 /**
  * @author Lisa Watkins
+ *
+ * Displays list of shelters in a user's area
  */
-class FavoritesFragment: Fragment(), Injectable {
+class ShelterSearchFragment : Fragment(), Injectable {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: ListAdapter<Favorite, FavoritesListAdapter.FavoritesViewHolder>
+    private lateinit var viewAdapter: ListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private lateinit var viewModel: FavoritesViewModel
+    private lateinit var viewModel: ShelterSearchViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -35,20 +37,19 @@ class FavoritesFragment: Fragment(), Injectable {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_favorites, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[FavoritesViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[ShelterSearchViewModel::class.java]
 
         viewManager = LinearLayoutManager(context)
-        viewAdapter = FavoritesListAdapter()
-        recyclerView = view.findViewById<RecyclerView>(R.id.favorites_recycler_view).apply {
-            // improves performance for fixed size recycler views
+        viewAdapter = ShelterListAdapter()
+        recyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
 
-        viewModel.favorites.observe(this, Observer<List<Favorite>> {
+        viewModel.shelters.observe(this, Observer<List<Shelter>> {
             viewAdapter.submitList(it)
         })
 

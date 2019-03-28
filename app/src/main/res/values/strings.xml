@@ -6,6 +6,6 @@
     <string name="match">Match</string>
     <string name="home">Home</string>
     <string name="favorites">Favorites</string>
-    <string name="search">Search</string>
+    <string name="shelters">Shelters</string>
     <string name="pet_image_content_description">Pet Image</string>
 </resources>

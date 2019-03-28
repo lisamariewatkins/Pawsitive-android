@@ -1,10 +1,9 @@
 package com.example.network.petlist
 
-import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 
-data class JsonResponse(@field:Json(name = "@version") val version: String,
-                        @field:Json(name = "petfinder") val petFinder: PetFinder)
+data class PetJsonResponse(@field:Json(name = "@version") val version: String,
+                           @field:Json(name = "petfinder") val petFinder: PetFinder)
 
 data class PetFinder(@field:Json(name = "lastOffset") val lastOffset: KeyValuePair,
                     @field:Json(name = "pets") val pets: PetObject)

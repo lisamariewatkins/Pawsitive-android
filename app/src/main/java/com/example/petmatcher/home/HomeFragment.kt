@@ -34,8 +34,6 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var imageCache: ImageCache // todo move this
 
     private lateinit var viewModel: HomeViewModel
 
@@ -51,12 +49,13 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
 
+        // todo this is not what we want
         viewModel.currentPet.value?.let {
-            showPet(it, petNameTextView, petDescriptionTextView, petImage)
+            viewModel.showPet(it, petNameTextView, petDescriptionTextView, petImage)
         }
 
         viewModel.currentPet.observe(viewLifecycleOwner, Observer { pet ->
-            showPet(pet, petNameTextView, petDescriptionTextView, petImage)
+            viewModel.showPet(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
         petImage.setOnClickListener {
@@ -72,29 +71,7 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
         return view
     }
 
-    private fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
-        val petName = pet.name.value
-        val petDescription = pet.description.value
-        pet.media.photos?.let {
-            val imageUrl = it.photoList[3].url
-            loadImage(petImage, imageUrl, pet.id.value)
-        }
-
-        petNameTextView.text = petName
-        petDescriptionTextView.text = petDescription
-    }
-
-    // todo move this
-    private fun loadImage(petImage: ImageView, imageUrl: String?, id: String) {
-        imageCache.getImage(id)?.let {
-            petImage.setImageDrawable(it)
-        } ?: run {
-            val options = RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.ic_placeholder_image) // todo find a placeholder asset
-                .error(R.drawable.ic_placeholder_image)
-
-            Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)
-        }
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

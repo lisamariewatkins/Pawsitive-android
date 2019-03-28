@@ -15,13 +15,11 @@ import com.bumptech.glide.Glide
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
 import com.example.petmatcher.data.Favorite
+import com.example.petmatcher.favorites.FavoritesListAdapter.Companion.PET_ID_KEY
 import javax.inject.Inject
 
 
 class DetailsFragment : Fragment(), Injectable {
-
-    private val args: DetailsFragmentArgs by navArgs()
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -36,7 +34,7 @@ class DetailsFragment : Fragment(), Injectable {
         val petImage = view.findViewById<ImageView>(R.id.pet_image)
         val petName = view.findViewById<TextView>(R.id.pet_name)
         val petDescription = view.findViewById<TextView>(R.id.pet_description)
-        val petId = args.PetId
+        val petId = arguments?.getString(PET_ID_KEY) ?: "" // todo error handling
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[DetailsViewModel::class.java]
 

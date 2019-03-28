@@ -23,9 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 class PetRepositoryTest {
     /** Mocks **/
     private val mockPetManager: PetManager = mockk()
-    private val mockImageCache: ImageCache = mockk()
 
-    private val petRepository = PetRepository(mockImageCache, mockPetManager)
+    private val petRepository = PetRepository(mockPetManager)
 
     /** Verify getNextPet works as expected **/
     @Nested
@@ -42,16 +41,15 @@ class PetRepositoryTest {
             } returns deferred
 
             // Exercise
-            val result = petRepository.getNextPet()
+            val result = petRepository.getPetsAsync(null).await()
+            val offset = result.petFinder.lastOffset
+            val pets = result.petFinder.pets.pet
 
             // Assert
-            result.observeForever {
-                Assert.assertNotNull(it)
-            }
-            coVerify {
-                mockImageCache.cacheImages(any())
-            }
-            Assert.assertEquals(deferred.getCompleted().petFinder.lastOffset.value, petRepository.offset)
+            val expected = deferred.getCompleted()
+
+            Assert.assertEquals(expected.petFinder.pets.pet, pets) // Assert the list we expect is of equal size
+            Assert.assertEquals(expected.petFinder.lastOffset, offset)
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.petmatcher.favorites.FavoritesViewModel
 import com.example.petmatcher.home.HomeViewModel
 import com.example.petmatcher.petdetails.DetailsViewModel
+import com.example.petmatcher.search.ShelterSearchViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -56,4 +57,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DetailsViewModel::class)
     internal abstract fun bindDetailsViewModel(viewModel: DetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ShelterSearchViewModel::class)
+    internal abstract fun bindShelterSearchViewModel(viewModel: ShelterSearchViewModel): ViewModel
 }

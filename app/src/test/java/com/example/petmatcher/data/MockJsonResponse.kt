@@ -3,7 +3,7 @@ package com.example.petmatcher.data
 import com.example.network.petlist.*
 
 class MockJsonResponse {
-    fun with(numberOfPets: Int): JsonResponse {
+    fun with(numberOfPets: Int): PetJsonResponse {
         val petList = ArrayList<Pet>()
         val petObject = PetObject(petList)
         val petFinder = PetFinder(KeyValuePair("25"), petObject)
@@ -36,6 +36,6 @@ class MockJsonResponse {
             ))
         }
 
-        return JsonResponse("version", petFinder)
+        return PetJsonResponse("version", petFinder)
     }
 }

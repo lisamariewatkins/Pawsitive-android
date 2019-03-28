@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/home"
+            app:startDestination="@id/homeFragment">
+    <fragment android:id="@+id/homeFragment" android:name="com.example.petmatcher.home.HomeFragment"
+              android:label="Home" tools:layout="@layout/fragment_home"/>
+</navigation>

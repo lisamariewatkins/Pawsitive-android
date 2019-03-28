@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.network.petlist.Pet
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +23,7 @@ class ImageCache @Inject constructor(val context: Context) {
     private val cache = LruCache<String, Drawable>(CACHE_SIZE)
 
     suspend fun cacheImages(pets: List<Pet>) {
-        withContext(IO) {
+        withContext(Dispatchers.Default) {
             pets.forEach { pet ->
                 val photos = pet.media.photos
                 if (photos != null) {
@@ -45,6 +45,6 @@ class ImageCache @Inject constructor(val context: Context) {
     }
 
     fun getImage(key: String): Drawable? {
-        return cache.remove(key)
+        return cache.get(key)
     }
 }

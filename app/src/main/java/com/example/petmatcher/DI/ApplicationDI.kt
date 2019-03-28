@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.room.Room
 import com.example.network.petlist.PetManager
 import com.example.network.petlist.PetManagerImpl
+import com.example.network.shelter.ShelterManager
+import com.example.network.shelter.ShelterManagerImpl
 import com.example.petmatcher.BaseApplication
 import com.example.petmatcher.data.AppDatabase
 import com.example.petmatcher.data.FavoriteDao
@@ -46,6 +48,12 @@ class ApplicationModule {
     @Provides
     fun providesPetManager(): PetManager {
         return PetManagerImpl()
+    }
+
+    @Singleton
+    @Provides
+    fun providesShelterManager(): ShelterManager {
+        return ShelterManagerImpl()
     }
 
     @Singleton

@@ -3,6 +3,7 @@ package com.example.petmatcher.favorites
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,6 +12,11 @@ import com.example.petmatcher.R
 import com.example.petmatcher.data.Favorite
 import kotlinx.android.synthetic.main.favorites_list_item.view.*
 
+/**
+ * @author Lisa Watkins
+ *
+ * ListAdapter that runs DiffUtil on a background thread to update the list with changes.
+ */
 class FavoritesListAdapter: ListAdapter<Favorite, FavoritesListAdapter.FavoritesViewHolder>(FavoriteDiffCallback()) {
 
     class FavoritesViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
@@ -28,11 +34,17 @@ class FavoritesListAdapter: ListAdapter<Favorite, FavoritesListAdapter.Favorites
         holder.view.favorite_breed.text = getItem(position).breed
 
         val petId = getItem(position).petId
-        val detailsAction = FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(petId)
+
+        val bundle = bundleOf(PET_ID_KEY to petId)
 
         holder.view.setOnClickListener {
-            it.findNavController().navigate(detailsAction)
+            it.findNavController().navigate(R.id.action_favoritesFragment_to_detailsFragment,
+                bundle)
         }
+    }
+
+    companion object {
+        const val PET_ID_KEY = "petId"
     }
 }
 
