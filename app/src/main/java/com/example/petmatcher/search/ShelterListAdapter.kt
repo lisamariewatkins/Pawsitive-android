@@ -17,7 +17,7 @@ class ShelterListAdapter: ListAdapter<Shelter, ShelterListAdapter.ShelterViewHol
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShelterViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.favorites_list_item, parent, false) as ConstraintLayout
+            .inflate(R.layout.shelter_list_item, parent, false) as ConstraintLayout
 
         return ShelterViewHolder(view)
     }

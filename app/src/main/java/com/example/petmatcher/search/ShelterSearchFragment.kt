@@ -49,7 +49,7 @@ class ShelterSearchFragment : Fragment(), Injectable {
             adapter = viewAdapter
         }
 
-        viewModel.shelters.observe(this, Observer<List<Shelter>> {
+        viewModel.getShelters().observe(this, Observer<List<Shelter>> {
             viewAdapter.submitList(it)
         })
 

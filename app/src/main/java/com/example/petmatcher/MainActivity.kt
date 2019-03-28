@@ -56,7 +56,8 @@ class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
-        val navGraphIds = listOf(R.navigation.favorites, R.navigation.home, R.navigation.shelters)
+        /** order matters **/
+        val navGraphIds = listOf(R.navigation.home, R.navigation.favorites, R.navigation.shelters)
 
         // Setup the bottom navigation view with a list of navigation graphs
         val controller = bottomNavigationView.setupWithNavController(
