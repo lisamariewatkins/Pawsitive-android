@@ -3,6 +3,7 @@ package com.example.petmatcher.DI
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.example.network.RetrofitFactory
 import com.example.network.petlist.PetManager
 import com.example.network.petlist.PetManagerImpl
 import com.example.network.shelter.ShelterManager
@@ -46,14 +47,20 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun providesPetManager(): PetManager {
-        return PetManagerImpl()
+    fun providesRetrofitInstance(context: Context): RetrofitFactory {
+        return RetrofitFactory(context)
     }
 
     @Singleton
     @Provides
-    fun providesShelterManager(): ShelterManager {
-        return ShelterManagerImpl()
+    fun providesPetManager(retrofitFactory: RetrofitFactory): PetManager {
+        return PetManagerImpl(retrofitFactory)
+    }
+
+    @Singleton
+    @Provides
+    fun providesShelterManager(retrofitFactory: RetrofitFactory): ShelterManager {
+        return ShelterManagerImpl(retrofitFactory)
     }
 
     @Singleton

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.network.shelter.Shelter
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
@@ -27,6 +28,8 @@ class ShelterSearchFragment : Fragment(), Injectable {
     private lateinit var viewAdapter: ListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private lateinit var pullToRefresh: SwipeRefreshLayout
+
     private lateinit var viewModel: ShelterSearchViewModel
 
     @Inject
@@ -41,6 +44,11 @@ class ShelterSearchFragment : Fragment(), Injectable {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[ShelterSearchViewModel::class.java]
 
+        pullToRefresh = view.findViewById(R.id.shelter_refresh)
+        pullToRefresh.setOnRefreshListener {
+            viewModel.getShelters()
+        }
+
         viewManager = LinearLayoutManager(context)
         viewAdapter = ShelterListAdapter()
         recyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
@@ -49,8 +57,9 @@ class ShelterSearchFragment : Fragment(), Injectable {
             adapter = viewAdapter
         }
 
-        viewModel.getShelters().observe(this, Observer<List<Shelter>> {
+        viewModel.sheltersList.observe(this, Observer<List<Shelter>> {
             viewAdapter.submitList(it)
+            pullToRefresh.isRefreshing = false
         })
 
         return view

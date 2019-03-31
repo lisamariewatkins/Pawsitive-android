@@ -10,8 +10,8 @@ interface PetManager {
     fun getPetListAsync(@Query("location") location: String, @Query("offset") offset: String?): Deferred<PetJsonResponse>
 }
 
-class PetManagerImpl: PetManager {
-    private val retrofitInstance = RetrofitFactory.retrofit().create(PetManager::class.java)
+class PetManagerImpl(retrofitFactory: RetrofitFactory): PetManager {
+    private val retrofitInstance = retrofitFactory.retrofit().create(PetManager::class.java)
 
     override fun getPetListAsync(location: String, offset: String?): Deferred<PetJsonResponse> {
         return retrofitInstance.getPetListAsync(location, offset)

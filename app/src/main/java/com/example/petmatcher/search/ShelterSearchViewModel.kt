@@ -10,12 +10,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ShelterSearchViewModel @Inject constructor(private val shelterRepository: ShelterRepository): ViewModel() {
+    val sheltersList = MutableLiveData<List<Shelter>>()
+
+    init {
+        getShelters()
+    }
 
     fun getShelters(): LiveData<List<Shelter>> {
-        val sheltersList = MutableLiveData<List<Shelter>>()
         viewModelScope.launch {
             val response = shelterRepository.getSheltersAsync().await()
-            val responsePet = response.petFinder
             sheltersList.postValue(response.petFinder.shelters.shelterList)
         }
         return sheltersList
