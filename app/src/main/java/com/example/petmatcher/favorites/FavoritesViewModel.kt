@@ -8,6 +8,6 @@ import com.example.petmatcher.data.FavoritesRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class FavoritesViewModel @Inject constructor(val favoritesRepository: FavoritesRepository): ViewModel() {
+class FavoritesViewModel @Inject constructor(favoritesRepository: FavoritesRepository): ViewModel() {
     val favorites = favoritesRepository.getFavoritesList()
 }

@@ -2,6 +2,8 @@ package com.example.petmatcher.home
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
@@ -11,6 +13,7 @@ import com.example.petmatcher.R
 import com.example.petmatcher.data.PetRepository
 import com.example.petmatcher.data.FavoritesRepository
 import com.example.petmatcher.memorycache.ImageCache
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -24,10 +27,12 @@ class HomeViewModel @Inject constructor(private val petRepository: PetRepository
                                         private val imageCache: ImageCache
 ): ViewModel() {
 
-    val currentPet = petRepository.currentPet
+    val currentPet = MutableLiveData<Pet>()
 
-    private val petList = LinkedList<Pet>()
-    private var offset: String? = null
+    @VisibleForTesting
+    internal val petList = LinkedList<Pet>()
+    @VisibleForTesting
+    internal var offset: String? = null
 
     init {
         if (petList.isEmpty()) {
@@ -43,9 +48,11 @@ class HomeViewModel @Inject constructor(private val petRepository: PetRepository
         }
     }
 
-    fun addPetToFavorites(newPet: Pet) {
+    fun addCurrentPetToFavorites() {
         viewModelScope.launch {
-            favoritesRepository.addToFavorites(newPet)
+            currentPet.value?.let {
+                favoritesRepository.addToFavorites(it)
+            }
         }
     }
 
@@ -61,11 +68,6 @@ class HomeViewModel @Inject constructor(private val petRepository: PetRepository
             // cache images
             imageCache.cacheImages(petList)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
     }
 
     fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
@@ -91,5 +93,11 @@ class HomeViewModel @Inject constructor(private val petRepository: PetRepository
 
             Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)
         }
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }

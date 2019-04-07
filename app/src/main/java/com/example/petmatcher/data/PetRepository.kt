@@ -1,8 +1,6 @@
 package com.example.petmatcher.data
 
-import androidx.lifecycle.MutableLiveData
 import com.example.network.petlist.PetJsonResponse
-import com.example.network.petlist.Pet
 import com.example.network.petlist.PetManager
 import kotlinx.coroutines.Deferred
 import javax.inject.Inject
@@ -13,7 +11,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class PetRepository @Inject constructor(private val petManager: PetManager) {
-    var currentPet = MutableLiveData<Pet>()
 
     /** Retrieve a list of pets asynchronously from the network **/
     fun getPetsAsync(offset: String?): Deferred<PetJsonResponse> {

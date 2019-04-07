@@ -2,12 +2,15 @@ package com.example.petmatcher.data
 
 import com.example.network.petlist.*
 
-class MockJsonResponse {
+class MockPetJsonResponse {
     fun with(numberOfPets: Int): PetJsonResponse {
         val petList = ArrayList<Pet>()
         val petObject = PetObject(petList)
         val petFinder = PetFinder(KeyValuePair("25"), petObject)
-        val photoInfo = ArrayList<PhotoInfo>()
+        val photoInfo = listOf(PhotoInfo("size", "url", "id"),
+            PhotoInfo("size", "url", "id"),
+            PhotoInfo("size", "url", "id"),
+            PhotoInfo("size", "url", "id"))
 
         for (i in 1..numberOfPets) {
             petList.add(Pet(

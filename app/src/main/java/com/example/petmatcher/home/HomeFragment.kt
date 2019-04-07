@@ -37,6 +37,11 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
 
     private lateinit var viewModel: HomeViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,13 +52,6 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
         val petDescriptionTextView: TextView = view.findViewById(R.id.pet_description)
         val matchButton: Button = view.findViewById(R.id.match_button)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
-
-        // todo this is not what we want
-        viewModel.currentPet.value?.let {
-            viewModel.showPet(it, petNameTextView, petDescriptionTextView, petImage)
-        }
-
         viewModel.currentPet.observe(viewLifecycleOwner, Observer { pet ->
             viewModel.showPet(pet, petNameTextView, petDescriptionTextView, petImage)
         })
@@ -63,15 +61,9 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
         }
 
         matchButton.setOnClickListener {
-            viewModel.currentPet.value?.let {
-                viewModel.addPetToFavorites(it)
-            }
+            viewModel.addCurrentPetToFavorites()
         }
 
         return view
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
