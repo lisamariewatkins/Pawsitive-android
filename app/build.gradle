@@ -73,6 +73,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-alpha04"
     testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
 
+    // Paging Library
+    implementation "android.arch.paging:runtime:$paging_lib_version"
+
     // Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"

@@ -1,5 +1,6 @@
 package com.example.petmatcher.home
 
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.VisibleForTesting
@@ -58,15 +59,20 @@ class HomeViewModel @Inject constructor(private val petRepository: PetRepository
 
     private fun loadPets() {
         viewModelScope.launch {
-            val pets = petRepository.getPetsAsync(offset).await()
-            // update offset
-            offset = pets.petFinder.lastOffset.value
-            // cache pets
-            petList.addAll(pets.petFinder.pets.pet)
-            // update current pet
-            currentPet.postValue(petList.pollFirst())
-            // cache images
-            imageCache.cacheImages(petList)
+            // todo error handling
+            try {
+                val pets = petRepository.getPetsAsync(offset).await()
+                // update offset
+                offset = pets.petFinder.lastOffset.value
+                // cache pets
+                petList.addAll(pets.petFinder.pets.pet)
+                // update current pet
+                currentPet.postValue(petList.pollFirst())
+                // cache images
+                imageCache.cacheImages(petList)
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", e.message)
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class ShelterRepository @Inject constructor(private val shelterManager: ShelterManager) {
 
-    fun getSheltersAsync(): Deferred<ShelterJsonResponse> {
-        return shelterManager.getShelterListAsync("78701", CachingPolicy.SHELTER_POLICY.settings)
+    fun getSheltersAsync(offset: String?): Deferred<ShelterJsonResponse> {
+        return shelterManager.getShelterListAsync("78701", offset, CachingPolicy.SHELTER_POLICY.settings)
     }
 }

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.network.shelter.Shelter
@@ -24,9 +24,9 @@ import javax.inject.Inject
  * Displays list of shelters in a user's area
  */
 class ShelterSearchFragment : Fragment(), Injectable {
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: ListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var shelterRecyclerView: RecyclerView
+    private lateinit var shelterListAdapter: PagedListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>
+    private lateinit var shelterLayoutManager: RecyclerView.LayoutManager
 
     private lateinit var pullToRefresh: SwipeRefreshLayout
 
@@ -46,20 +46,19 @@ class ShelterSearchFragment : Fragment(), Injectable {
 
         pullToRefresh = view.findViewById(R.id.shelter_refresh)
         pullToRefresh.setOnRefreshListener {
-            viewModel.getShelters()
+            // todo pull to refresh with paging library
         }
 
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = ShelterListAdapter()
-        recyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
+        shelterLayoutManager = LinearLayoutManager(context)
+        shelterListAdapter = ShelterListAdapter()
+        shelterRecyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
             setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
+            layoutManager = shelterLayoutManager
+            adapter = shelterListAdapter
         }
 
-        viewModel.sheltersList.observe(this, Observer<List<Shelter>> {
-            viewAdapter.submitList(it)
-            pullToRefresh.isRefreshing = false
+        viewModel.sheltersList.observe(viewLifecycleOwner, Observer {
+            shelterListAdapter.submitList(it)
         })
 
         return view
