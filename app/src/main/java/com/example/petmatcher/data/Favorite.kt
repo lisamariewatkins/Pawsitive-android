@@ -7,7 +7,7 @@ const val favoritesTableName = "Favorites"
 
 @Entity(tableName = favoritesTableName)
 data class Favorite(
-    @PrimaryKey val petId: String,
+    @PrimaryKey val petId: Int,
     val name: String,
     val description: String,
     val breed: String,

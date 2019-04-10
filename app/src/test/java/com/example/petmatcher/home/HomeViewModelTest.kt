@@ -2,10 +2,9 @@ package com.example.petmatcher.home
 
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.network.petlist.Pet
 import com.example.petmatcher.data.FavoritesRepository
-import com.example.petmatcher.data.MockPetJsonResponse
-import com.example.petmatcher.data.PetRepository
+import com.example.petmatcher.data.MockAnimalJsonResponse
+import com.example.petmatcher.data.AnimalRepository
 import com.example.petmatcher.memorycache.ImageCache
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import io.mockk.coVerify
@@ -26,7 +25,7 @@ import java.util.concurrent.Executors
 @ExtendWith(InstantExecutorExtension::class)
 class HomeViewModelTest {
 
-    val mockPetRepository: PetRepository = mockk()
+    val mockAnimalRepository: AnimalRepository = mockk()
     val mockFavoriteRepository: FavoritesRepository = mockk(relaxed = true)
     val mockImageCache: ImageCache = mockk(relaxed = true)
 
@@ -54,21 +53,21 @@ class HomeViewModelTest {
         @ExperimentalCoroutinesApi
         fun `Verify ViewModel is initialized with pet list if server request successful`() = runBlocking {
             // Arrange
-            val mockJsonData = CompletableDeferred(MockPetJsonResponse().with(10))
+            val mockJsonData = CompletableDeferred(MockAnimalJsonResponse().with(10))
 
             every {
-                mockPetRepository.getPetsAsync(any())
+                mockAnimalRepository.getAnimalsAsync()
             } returns mockJsonData
 
             // Exercise
-            viewModel = HomeViewModel(mockPetRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
 
             // Assert
             val expected = mockJsonData.getCompleted()
 
-            viewModel.currentPet.observeForever {
-                Assert.assertEquals(expected.petFinder.pets.pet.size - 1, viewModel.petList.size)
-                Assert.assertEquals(expected.petFinder.pets.pet[0], it)
+            viewModel.currentAnimal.observeForever {
+                Assert.assertEquals(expected.animals.size - 1, viewModel.animalList.size)
+                Assert.assertEquals(expected.animals[0], it)
             }
 
             coVerify {
@@ -84,17 +83,17 @@ class HomeViewModelTest {
         @Test
         fun `Verify adding the current pet to favorites`() = runBlocking {
             // Arrange
-            val mockJsonData = CompletableDeferred(MockPetJsonResponse().with(10))
+            val mockJsonData = CompletableDeferred(MockAnimalJsonResponse().with(10))
 
             every {
-                mockPetRepository.getPetsAsync(any())
+                mockAnimalRepository.getAnimalsAsync()
             } returns mockJsonData
 
-            viewModel = HomeViewModel(mockPetRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
 
-            viewModel.currentPet.observeForever {
+            viewModel.currentAnimal.observeForever {
                 // Exercise
-                viewModel.addCurrentPetToFavorites()
+                viewModel.addCurrentAnimalToFavorites()
 
                 // Assert
                 coVerify {
@@ -106,26 +105,26 @@ class HomeViewModelTest {
         @Test
         fun `Verify show pet populates proper views with data`() {
             // Arrange
-            val mockJsonData = CompletableDeferred(MockPetJsonResponse().with(10))
+            val mockJsonData = CompletableDeferred(MockAnimalJsonResponse().with(10))
 
             every {
-                mockPetRepository.getPetsAsync(any())
+                mockAnimalRepository.getAnimalsAsync()
             } returns mockJsonData
 
-            viewModel = HomeViewModel(mockPetRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
 
             val mockPetNameTextView: TextView = mockk(relaxed = true)
             val mockPetDescriptionTextView: TextView = mockk(relaxed = true)
             val mockPetImageView: ImageView = mockk(relaxed = true)
 
             // Exercise
-            viewModel.currentPet.observeForever {
-                viewModel.showPet(it, mockPetNameTextView, mockPetDescriptionTextView, mockPetImageView)
+            viewModel.currentAnimal.observeForever {
+                viewModel.showAnimal(it, mockPetNameTextView, mockPetDescriptionTextView, mockPetImageView)
 
                 // Assert
                 verify {
-                    mockPetDescriptionTextView.text = it.description.value
-                    mockPetNameTextView.text = it.name.value
+                    mockPetDescriptionTextView.text = it.description
+                    mockPetNameTextView.text = it.name
                 }
             }
         }

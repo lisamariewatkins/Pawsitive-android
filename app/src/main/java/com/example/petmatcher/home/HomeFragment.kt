@@ -11,27 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
 import javax.inject.Inject
-import com.bumptech.glide.request.RequestOptions
-import com.example.network.petlist.Pet
-import com.example.petmatcher.memorycache.ImageCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 /**
  * Home screen of the app and start fragment in the navigation graph. Hosts the pet cards that a user can swipe.
  */
-class HomeFragment: Fragment(), Injectable, CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
-
+class HomeFragment: Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -49,16 +39,16 @@ class HomeFragment: Fragment(), Injectable, CoroutineScope {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
 
-        viewModel.currentPet.observe(viewLifecycleOwner, Observer { pet ->
-            viewModel.showPet(pet, petNameTextView, petDescriptionTextView, petImage)
+        viewModel.currentAnimal.observe(viewLifecycleOwner, Observer { pet ->
+            viewModel.showAnimal(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
         petImage.setOnClickListener {
-            viewModel.nextPet()
+            viewModel.nextAnimal()
         }
 
         matchButton.setOnClickListener {
-            viewModel.addCurrentPetToFavorites()
+            viewModel.addCurrentAnimalToFavorites()
         }
 
         return view

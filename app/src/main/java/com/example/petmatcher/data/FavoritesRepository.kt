@@ -1,5 +1,6 @@
 package com.example.petmatcher.data
 
+import com.example.network.animals.Animal
 import com.example.network.petlist.Pet
 import com.example.petmatcher.data.Favorite
 import com.example.petmatcher.data.FavoriteDao
@@ -11,12 +12,12 @@ import javax.inject.Singleton
 @Singleton
 class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteDao) {
 
-    suspend fun addToFavorites(newPet: Pet) {
-        val favorite = Favorite(newPet.id.value,
-            newPet.name.value,
-            newPet.description.value,
-            newPet.animal.value,
-            newPet.media.photos?.photoList?.get(3)?.url!! // todo fix this
+    suspend fun addToFavorites(newPet: Animal) {
+        val favorite = Favorite(newPet.id,
+            newPet.name,
+            newPet.description,
+            newPet.type,
+            newPet.photos?.get(0)?.large!!
         )
 
         withContext(IO) {

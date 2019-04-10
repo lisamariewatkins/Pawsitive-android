@@ -7,13 +7,13 @@ import retrofit2.http.Query
 
 interface AnimalService {
     @GET("animals")
-    fun getAnimalsAsync(@Query("location") location: String): Deferred<AnimalJsonResponse>
+    fun getAnimalsAsync(): Deferred<AnimalJsonResponse>
 }
 
 class AnimalServiceImpl(retrofitFactory: RetrofitFactoryV2): AnimalService {
     private val retrofitInstance = retrofitFactory.retrofit().create(AnimalService::class.java)
 
-    override fun getAnimalsAsync(location: String): Deferred<AnimalJsonResponse> {
-        return retrofitInstance.getAnimalsAsync(location)
+    override fun getAnimalsAsync(): Deferred<AnimalJsonResponse> {
+        return retrofitInstance.getAnimalsAsync()
     }
 }

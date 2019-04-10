@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.network.petlist.Pet
+import com.example.network.animals.Animal
 import com.example.petmatcher.R
-import com.example.petmatcher.data.PetRepository
+import com.example.petmatcher.data.AnimalRepository
 import com.example.petmatcher.data.FavoritesRepository
 import com.example.petmatcher.memorycache.ImageCache
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,72 +23,69 @@ import javax.inject.Inject
 /**
  * ViewModel for HomeFragment
  */
-class HomeViewModel @Inject constructor(private val petRepository: PetRepository,
+class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepository,
                                         private val favoritesRepository: FavoritesRepository,
                                         private val imageCache: ImageCache
 ): ViewModel() {
-
-    val currentPet = MutableLiveData<Pet>()
+    val currentAnimal = MutableLiveData<Animal>()
 
     @VisibleForTesting
-    internal val petList = LinkedList<Pet>()
-    @VisibleForTesting
-    internal var offset: String? = null
+    internal val animalList = LinkedList<Animal>()
 
     init {
-        if (petList.isEmpty()) {
-            loadPets()
+        if (animalList.isEmpty()) {
+            loadAnimals()
         }
     }
 
-    fun nextPet() {
-        if (!petList.isEmpty()) {
-            currentPet.value = petList.pollFirst()
+    fun nextAnimal() {
+        if (!animalList.isEmpty()) {
+            currentAnimal.value = animalList.pollFirst()
         } else {
-            loadPets()
+            loadAnimals()
         }
     }
 
-    fun addCurrentPetToFavorites() {
+    fun addCurrentAnimalToFavorites() {
         viewModelScope.launch {
-            currentPet.value?.let {
+            currentAnimal.value?.let {
                 favoritesRepository.addToFavorites(it)
             }
         }
     }
 
-    private fun loadPets() {
+    private fun loadAnimals() {
         viewModelScope.launch {
             // todo error handling
             try {
-                val pets = petRepository.getPetsAsync(offset).await()
-                // update offset
-                offset = pets.petFinder.lastOffset.value
+                val animalResponse = animalRepository.getAnimalsAsync().await()
                 // cache pets
-                petList.addAll(pets.petFinder.pets.pet)
+                animalList.addAll(animalResponse.animals)
                 // update current pet
-                currentPet.postValue(petList.pollFirst())
+                currentAnimal.postValue(animalList.pollFirst())
                 // cache images
-                imageCache.cacheImages(petList)
+                imageCache.cacheImages(animalList)
             } catch (e: Exception) {
+                // todo error handling
                 Log.e("HomeViewModel", e.message)
             }
         }
     }
 
-    fun showPet(pet: Pet, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
-        val petName = pet.name.value
-        val petDescription = pet.description.value
-        pet.media.photos?.let {
-            val imageUrl = it.photoList[3].url
-            loadImage(petImage, imageUrl, pet.id.value)
+    fun showAnimal(animal: Animal, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
+        val petName = animal.name
+        val petDescription = animal.description
+
+        if (!animal.photos.isEmpty()) {
+            val imageUrl = animal.photos[0].large
+            loadImage(petImage, imageUrl, animal.id)
         }
 
         petNameTextView.text = petName
         petDescriptionTextView.text = petDescription
     }
 
-    private fun loadImage(petImage: ImageView, imageUrl: String?, id: String) {
+    private fun loadImage(petImage: ImageView, imageUrl: String?, id: Int) {
         imageCache.getImage(id)?.let {
             petImage.setImageDrawable(it)
         } ?: run {

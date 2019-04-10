@@ -7,8 +7,6 @@ import com.example.network.RetrofitFactory
 import com.example.network.RetrofitFactoryV2
 import com.example.network.animals.AnimalService
 import com.example.network.animals.AnimalServiceImpl
-import com.example.network.petlist.PetManager
-import com.example.network.petlist.PetManagerImpl
 import com.example.network.shelter.ShelterManager
 import com.example.network.shelter.ShelterManagerImpl
 import com.example.petmatcher.BaseApplication
@@ -64,12 +62,6 @@ class ApplicationModule {
     @Provides
     fun providesAnimalService(retrofitFactoryV2: RetrofitFactoryV2): AnimalService {
         return AnimalServiceImpl(retrofitFactoryV2)
-    }
-
-    @Singleton
-    @Provides
-    fun providesPetManager(retrofitFactory: RetrofitFactory): PetManager {
-        return PetManagerImpl(retrofitFactory)
     }
 
     @Singleton
