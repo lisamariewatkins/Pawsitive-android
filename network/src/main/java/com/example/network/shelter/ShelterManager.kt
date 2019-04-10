@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
+@Deprecated("Migration to V2 under way")
 interface ShelterManager {
     @GET("shelter.find")
     fun getShelterListAsync(@Query("location") location: String,
@@ -13,6 +14,7 @@ interface ShelterManager {
                             @Header("Cache-Control") cacheControl: String?): Deferred<ShelterJsonResponse>
 }
 
+@Deprecated("Migration to V2 under way")
 class ShelterManagerImpl(retrofitFactory: RetrofitFactory): ShelterManager {
     private val retrofitInstance = retrofitFactory.retrofit().create(ShelterManager::class.java)
 

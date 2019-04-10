@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.network.RetrofitFactory
+import com.example.network.RetrofitFactoryV2
+import com.example.network.animals.AnimalService
+import com.example.network.animals.AnimalServiceImpl
 import com.example.network.petlist.PetManager
 import com.example.network.petlist.PetManagerImpl
 import com.example.network.shelter.ShelterManager
@@ -49,6 +52,18 @@ class ApplicationModule {
     @Provides
     fun providesRetrofitInstance(context: Context): RetrofitFactory {
         return RetrofitFactory(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesRetrofitV2Instance(): RetrofitFactoryV2 {
+        return RetrofitFactoryV2()
+    }
+
+    @Singleton
+    @Provides
+    fun providesAnimalService(retrofitFactoryV2: RetrofitFactoryV2): AnimalService {
+        return AnimalServiceImpl(retrofitFactoryV2)
     }
 
     @Singleton

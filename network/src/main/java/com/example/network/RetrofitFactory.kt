@@ -1,20 +1,24 @@
 package com.example.network
 
 import android.content.Context
+import com.example.network.petfinderauth.PetFinderAuthService
 import com.example.network.secret.Key
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import okhttp3.Cache
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import okhttp3.OkHttpClient
 
-const val BASE_URL = "https://api.petfinder.com/";
+const val BASE_URL = "https://api.petfinder.com/"
+const val BASE_URL_V2 = "https://api.petfinder.com/v2/"
+const val AUTHORIZATION = "Authorization"
+const val CLIENT_CREDENTIALS = "client_credentials"
 const val KEY = "key"
 const val FORMAT = "format"
 const val JSON = "json"
 
+@Deprecated("Migration to V2 in progress")
 class RetrofitFactory(val context: Context) {
     private val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
     private val cache = Cache(context.cacheDir, cacheSize)
@@ -48,5 +52,81 @@ class RetrofitFactory(val context: Context) {
             .client(okHttpClient.build())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+    }
+}
+
+/**
+ * Creates retrofit instance for use with all PetFinder API calls
+ */
+class RetrofitFactoryV2 {
+    private val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val tokenAuthenticator = TokenAuthenticator(retrofitRefresh())
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .addInterceptor(tokenAuthenticator)
+        .authenticator(tokenAuthenticator)
+
+    /**
+     * Retrofit instance for all PetFinder API calls
+     */
+    fun retrofit(): Retrofit {
+        return Retrofit.Builder()
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .baseUrl(BASE_URL_V2)
+            .client(okHttpClient.build())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
+
+    /**
+     * Retrofit instance for auth token refresh
+     */
+    private fun retrofitRefresh(): Retrofit {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL_V2)
+            .client(okHttpClient.build())
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
+
+    /**
+     * Intercept requests and add authorization token
+     */
+    class TokenAuthenticator(private val retrofit: Retrofit): Authenticator, Interceptor {
+        // todo save to shared pref maybe?
+        private var accessToken: String? = ""
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request()
+                .newBuilder()
+                .addHeader(AUTHORIZATION, "Bearer $accessToken")
+                .build()
+
+            return chain.proceed(request)
+        }
+
+        /**
+         * Okhttp will automatically ask the [Authenticator] for credentials when the response is 401 Not Authorized and retry
+         * the last failed request with the new credentials
+         */
+        override fun authenticate(route: Route?, response: Response): Request? {
+            val petFinderAuthService = retrofit.create(PetFinderAuthService::class.java)
+            val retrofitResponse = petFinderAuthService.refreshToken(CLIENT_CREDENTIALS, Key.API_KEY_V2, Key.API_SECRET_V2)
+
+            accessToken = retrofitResponse.execute().body()?.accessToken
+
+            return if (accessToken != null) {
+                // Add new header to rejected request and retry it
+                response.request().newBuilder()
+                    .header(AUTHORIZATION, "Bearer $accessToken")
+                    .build()
+            } else {
+                null
+            }
+        }
     }
 }
