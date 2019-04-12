@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InstantExecutorExtension::class)
-class ShelterRepositoryTest {
+class OrganizationRepositoryTest {
     @Nested
     inner class getShelters {
         @Test

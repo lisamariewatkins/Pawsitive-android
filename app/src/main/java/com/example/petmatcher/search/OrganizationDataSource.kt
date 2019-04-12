@@ -2,19 +2,19 @@ package com.example.petmatcher.search
 
 import androidx.paging.PageKeyedDataSource
 import com.example.network.organizations.Organization
-import com.example.petmatcher.data.ShelterRepository
+import com.example.petmatcher.data.OrganizationRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class ShelterDataSource constructor(private val shelterRepository: ShelterRepository)
+class OrganizationDataSource constructor(private val organizationRepository: OrganizationRepository)
     : PageKeyedDataSource<String, Organization>() {
 
     // todo scope
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, Organization>) {
         GlobalScope.launch {
             try {
-                val response = shelterRepository.getSheltersAsync().await()
+                val response = organizationRepository.getSheltersAsync().await()
                 val shelters = response.organizations
                 val next = response.pagination.links.next.href
 
@@ -28,7 +28,7 @@ class ShelterDataSource constructor(private val shelterRepository: ShelterReposi
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Organization>) {
         GlobalScope.launch {
             try {
-                val response = shelterRepository.getNextSheltersAsync(path = params.key).await()
+                val response = organizationRepository.getNextSheltersAsync(path = params.key).await()
                 val shelters = response.organizations
                 val next = response.pagination.links.next.href
 

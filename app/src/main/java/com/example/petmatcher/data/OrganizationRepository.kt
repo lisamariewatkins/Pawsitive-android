@@ -5,7 +5,7 @@ import com.example.network.organizations.OrganizationService
 import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 
-class ShelterRepository @Inject constructor(private val organizationService: OrganizationService) {
+class OrganizationRepository @Inject constructor(private val organizationService: OrganizationService) {
 
     fun getSheltersAsync(): Deferred<OrganizationJsonResponse> {
         return organizationService.getOrganizationsAsync()

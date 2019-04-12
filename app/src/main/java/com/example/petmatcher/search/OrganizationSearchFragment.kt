@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.network.organizations.Organization
-import com.example.network.shelter.Shelter
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
 import javax.inject.Inject
@@ -24,14 +23,14 @@ import javax.inject.Inject
  *
  * Displays list of shelters in a user's area
  */
-class ShelterSearchFragment : Fragment(), Injectable {
+class OrganizationSearchFragment : Fragment(), Injectable {
     private lateinit var shelterRecyclerView: RecyclerView
-    private lateinit var shelterListAdapter: PagedListAdapter<Organization, ShelterListAdapter.ShelterViewHolder>
+    private lateinit var organizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>
     private lateinit var shelterLayoutManager: RecyclerView.LayoutManager
 
     private lateinit var pullToRefresh: SwipeRefreshLayout
 
-    private lateinit var viewModel: ShelterSearchViewModel
+    private lateinit var viewModel: OrganizationSearchViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -43,7 +42,7 @@ class ShelterSearchFragment : Fragment(), Injectable {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[ShelterSearchViewModel::class.java]
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[OrganizationSearchViewModel::class.java]
 
         pullToRefresh = view.findViewById(R.id.shelter_refresh)
         pullToRefresh.setOnRefreshListener {
@@ -52,15 +51,15 @@ class ShelterSearchFragment : Fragment(), Injectable {
         }
 
         shelterLayoutManager = LinearLayoutManager(context)
-        shelterListAdapter = ShelterListAdapter()
+        organizationListAdapter = OrganizationListAdapter()
         shelterRecyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
             setHasFixedSize(true)
             layoutManager = shelterLayoutManager
-            adapter = shelterListAdapter
+            adapter = organizationListAdapter
         }
 
-        viewModel.sheltersList.observe(viewLifecycleOwner, Observer {
-            shelterListAdapter.submitList(it)
+        viewModel.organizationsList.observe(viewLifecycleOwner, Observer {
+            organizationListAdapter.submitList(it)
         })
 
         return view

@@ -5,30 +5,28 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.network.organizations.Organization
-import com.example.network.shelter.Shelter
 import com.example.petmatcher.R
 import kotlinx.android.synthetic.main.shelter_list_item.view.*
 
-class ShelterListAdapter: PagedListAdapter<Organization, ShelterListAdapter.ShelterViewHolder>(ShelterDiffCallback()) {
+class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>(OrganizationDiffCallback()) {
 
-    class ShelterViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
+    class OrganizationViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShelterViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrganizationViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.shelter_list_item, parent, false) as ConstraintLayout
 
-        return ShelterViewHolder(view)
+        return OrganizationViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ShelterViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OrganizationViewHolder, position: Int) {
         holder.view.shelter_name.text = getItem(position)?.name
     }
 }
 
-class ShelterDiffCallback : DiffUtil.ItemCallback<Organization>() {
+class OrganizationDiffCallback : DiffUtil.ItemCallback<Organization>() {
     override fun areItemsTheSame(oldItem: Organization, newItem: Organization): Boolean {
         return oldItem.id == newItem.id
     }

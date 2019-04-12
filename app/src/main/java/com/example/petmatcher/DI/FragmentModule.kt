@@ -3,7 +3,7 @@ package com.example.petmatcher.DI
 import com.example.petmatcher.favorites.FavoritesFragment
 import com.example.petmatcher.home.HomeFragment
 import com.example.petmatcher.petdetails.DetailsFragment
-import com.example.petmatcher.search.ShelterSearchFragment
+import com.example.petmatcher.search.OrganizationSearchFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -19,7 +19,7 @@ abstract class FragmentBuildersModule {
     abstract fun contributesFavoritesFragment(): FavoritesFragment
 
     @ContributesAndroidInjector
-    abstract fun contributesInfoFragment(): ShelterSearchFragment
+    abstract fun contributesInfoFragment(): OrganizationSearchFragment
 
     @ContributesAndroidInjector
     abstract fun contributesDetailFragment(): DetailsFragment

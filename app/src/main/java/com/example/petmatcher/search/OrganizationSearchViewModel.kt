@@ -1,24 +1,18 @@
 package com.example.petmatcher.search
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.network.organizations.Organization
-import com.example.network.shelter.Shelter
-import com.example.petmatcher.data.ShelterRepository
+import com.example.petmatcher.data.OrganizationRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ShelterSearchViewModel @Inject constructor(private val shelterRepository: ShelterRepository)
+class OrganizationSearchViewModel @Inject constructor(private val organizationRepository: OrganizationRepository)
     : ViewModel() {
-    private val organizationSourceFactory = OrganizationDataSourceFactory(shelterRepository)
-    var sheltersList: LiveData<PagedList<Organization>>
+    private val organizationSourceFactory = OrganizationDataSourceFactory(organizationRepository)
+    var organizationsList: LiveData<PagedList<Organization>>
 
     init {
         val config = PagedList.Config.Builder()
@@ -26,7 +20,7 @@ class ShelterSearchViewModel @Inject constructor(private val shelterRepository: 
             .setEnablePlaceholders(false)
             .build()
 
-        sheltersList  = LivePagedListBuilder<String, Organization>(organizationSourceFactory, config).build()
+        organizationsList  = LivePagedListBuilder<String, Organization>(organizationSourceFactory, config).build()
     }
 
     fun refresh() {
