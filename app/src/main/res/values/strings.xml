@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">Pawsitive</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="match">Match</string>
     <string name="home">Home</string>
     <string name="favorites">Favorites</string>
     <string name="shelters">Shelters</string>
     <string name="pet_image_content_description">Pet Image</string>
+    <string name="error_message">Oops! Something went wrong.</string>
 </resources>

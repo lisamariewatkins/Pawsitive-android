@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface AnimalService {
-    @GET("animals")
+    @GET("/v2/animals")
     fun getAnimalsAsync(): Deferred<AnimalJsonResponse>
 }
 

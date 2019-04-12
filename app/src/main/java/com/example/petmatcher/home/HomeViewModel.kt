@@ -13,6 +13,7 @@ import com.example.network.animals.Animal
 import com.example.petmatcher.R
 import com.example.petmatcher.data.AnimalRepository
 import com.example.petmatcher.data.FavoritesRepository
+import com.example.petmatcher.errorhandling.ErrorState
 import com.example.petmatcher.memorycache.ImageCache
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -28,6 +29,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
                                         private val imageCache: ImageCache
 ): ViewModel() {
     val currentAnimal = MutableLiveData<Animal>()
+    val error = MutableLiveData<ErrorState>()
 
     @VisibleForTesting
     internal val animalList = LinkedList<Animal>()
@@ -56,7 +58,6 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
 
     private fun loadAnimals() {
         viewModelScope.launch {
-            // todo error handling
             try {
                 val animalResponse = animalRepository.getAnimalsAsync().await()
                 // cache pets
@@ -66,7 +67,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
                 // cache images
                 imageCache.cacheImages(animalList)
             } catch (e: Exception) {
-                // todo error handling
+                error.postValue(ErrorState.NETWORK_FAILURE)
                 Log.e("HomeViewModel", e.message)
             }
         }
@@ -91,7 +92,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
         } ?: run {
             val options = RequestOptions()
                 .centerCrop()
-                .placeholder(R.drawable.ic_placeholder_image) // todo find a placeholder asset
+                .placeholder(R.drawable.ic_placeholder_image)
                 .error(R.drawable.ic_placeholder_image)
 
             Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)

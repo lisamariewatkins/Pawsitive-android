@@ -12,6 +12,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.network.organizations.Organization
 import com.example.network.shelter.Shelter
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
@@ -25,7 +26,7 @@ import javax.inject.Inject
  */
 class ShelterSearchFragment : Fragment(), Injectable {
     private lateinit var shelterRecyclerView: RecyclerView
-    private lateinit var shelterListAdapter: PagedListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>
+    private lateinit var shelterListAdapter: PagedListAdapter<Organization, ShelterListAdapter.ShelterViewHolder>
     private lateinit var shelterLayoutManager: RecyclerView.LayoutManager
 
     private lateinit var pullToRefresh: SwipeRefreshLayout
@@ -46,7 +47,8 @@ class ShelterSearchFragment : Fragment(), Injectable {
 
         pullToRefresh = view.findViewById(R.id.shelter_refresh)
         pullToRefresh.setOnRefreshListener {
-            // todo pull to refresh with paging library
+            viewModel.refresh()
+            pullToRefresh.isRefreshing = false
         }
 
         shelterLayoutManager = LinearLayoutManager(context)

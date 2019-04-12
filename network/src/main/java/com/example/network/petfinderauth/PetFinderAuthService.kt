@@ -6,7 +6,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface PetFinderAuthService {
-    @POST("oauth2/token")
+    @POST("/v2/oauth2/token")
     @FormUrlEncoded
     fun refreshToken(
         @Field("grant_type") grantType: String,

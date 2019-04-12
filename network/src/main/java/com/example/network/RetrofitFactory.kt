@@ -11,7 +11,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import okhttp3.OkHttpClient
 
 const val BASE_URL = "https://api.petfinder.com/"
-const val BASE_URL_V2 = "https://api.petfinder.com/v2/"
+const val BASE_URL_V2 = "https://api.petfinder.com"
 const val AUTHORIZATION = "Authorization"
 const val CLIENT_CREDENTIALS = "client_credentials"
 const val KEY = "key"

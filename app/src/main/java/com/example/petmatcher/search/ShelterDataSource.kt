@@ -1,53 +1,45 @@
 package com.example.petmatcher.search
 
 import androidx.paging.PageKeyedDataSource
-import com.example.network.shelter.Shelter
+import com.example.network.organizations.Organization
 import com.example.petmatcher.data.ShelterRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-// todo network failure / no network
-// todo dagger set up
-// todo update with paginated v2 API
 class ShelterDataSource constructor(private val shelterRepository: ShelterRepository)
-    : PageKeyedDataSource<String, Shelter>() {
-
+    : PageKeyedDataSource<String, Organization>() {
 
     // todo scope
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, Shelter>) {
+    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, Organization>) {
         GlobalScope.launch {
-            val response = shelterRepository.getSheltersAsync(null).await()
-            val shelters = response.petFinder.shelters.shelterList
+            try {
+                val response = shelterRepository.getSheltersAsync().await()
+                val shelters = response.organizations
+                val next = response.pagination.links.next.href
 
-            val next = response.petFinder.lastOffset.value
-            val previous = (next.toInt() - 25).toString()
-
-            callback.onResult(shelters, previous, next)
+                callback.onResult(shelters, null, next)
+            } catch (e: Exception) {
+                // todo error handling
+            }
         }
     }
 
-    // todo scope
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Shelter>) {
+    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Organization>) {
         GlobalScope.launch {
-            val response = shelterRepository.getSheltersAsync(null).await()
-            val shelters = response.petFinder.shelters.shelterList
+            try {
+                val response = shelterRepository.getNextSheltersAsync(path = params.key).await()
+                val shelters = response.organizations
+                val next = response.pagination.links.next.href
 
-            val next = response.petFinder.lastOffset.value
-
-            callback.onResult(shelters, next)
+                callback.onResult(shelters, next)
+            } catch (e: Exception) {
+                // todo error handling
+            }
         }
     }
 
-    // todo scope
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, Shelter>) {
-        GlobalScope.launch {
-            val response = shelterRepository.getSheltersAsync(null).await()
-            val shelters = response.petFinder.shelters.shelterList
-
-            val next = response.petFinder.lastOffset.value
-            val previous = (next.toInt() - 25).toString()
-
-            callback.onResult(shelters, previous)
-        }
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, Organization>) {
+        // ignored, because we only append to our initial load
     }
 }

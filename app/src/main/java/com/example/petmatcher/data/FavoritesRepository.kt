@@ -1,9 +1,6 @@
 package com.example.petmatcher.data
 
 import com.example.network.animals.Animal
-import com.example.network.petlist.Pet
-import com.example.petmatcher.data.Favorite
-import com.example.petmatcher.data.FavoriteDao
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

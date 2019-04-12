@@ -1,14 +1,17 @@
 package com.example.petmatcher.data
 
-import com.example.network.shelter.ShelterJsonResponse
-import com.example.network.shelter.ShelterManager
-import com.example.network.CachingPolicy
+import com.example.network.organizations.OrganizationJsonResponse
+import com.example.network.organizations.OrganizationService
 import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 
-class ShelterRepository @Inject constructor(private val shelterManager: ShelterManager) {
+class ShelterRepository @Inject constructor(private val organizationService: OrganizationService) {
 
-    fun getSheltersAsync(offset: String?): Deferred<ShelterJsonResponse> {
-        return shelterManager.getShelterListAsync("78701", offset, CachingPolicy.SHELTER_POLICY.settings)
+    fun getSheltersAsync(): Deferred<OrganizationJsonResponse> {
+        return organizationService.getOrganizationsAsync()
+    }
+
+    fun getNextSheltersAsync(path: String): Deferred<OrganizationJsonResponse> {
+        return organizationService.getNextOrganizationsAsync(path)
     }
 }

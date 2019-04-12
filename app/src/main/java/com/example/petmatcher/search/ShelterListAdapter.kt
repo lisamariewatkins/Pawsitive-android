@@ -7,11 +7,12 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.network.organizations.Organization
 import com.example.network.shelter.Shelter
 import com.example.petmatcher.R
 import kotlinx.android.synthetic.main.shelter_list_item.view.*
 
-class ShelterListAdapter: PagedListAdapter<Shelter, ShelterListAdapter.ShelterViewHolder>(ShelterDiffCallback()) {
+class ShelterListAdapter: PagedListAdapter<Organization, ShelterListAdapter.ShelterViewHolder>(ShelterDiffCallback()) {
 
     class ShelterViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
 
@@ -23,13 +24,12 @@ class ShelterListAdapter: PagedListAdapter<Shelter, ShelterListAdapter.ShelterVi
     }
 
     override fun onBindViewHolder(holder: ShelterViewHolder, position: Int) {
-        holder.view.shelter_name.text = getItem(position)?.name?.value
-        holder.view.shelter_city.text = getItem(position)?.city?.value
+        holder.view.shelter_name.text = getItem(position)?.name
     }
 }
 
-class ShelterDiffCallback : DiffUtil.ItemCallback<Shelter>() {
-    override fun areItemsTheSame(oldItem: Shelter, newItem: Shelter): Boolean {
+class ShelterDiffCallback : DiffUtil.ItemCallback<Organization>() {
+    override fun areItemsTheSame(oldItem: Organization, newItem: Organization): Boolean {
         return oldItem.id == newItem.id
     }
 
@@ -37,8 +37,7 @@ class ShelterDiffCallback : DiffUtil.ItemCallback<Shelter>() {
      * Asks whether the content of the same item is the same. Check to ensure that none of the displayed
      * content has changed.
      */
-    override fun areContentsTheSame(oldItem: Shelter, newItem: Shelter): Boolean {
-        return oldItem.name == newItem.name &&
-                oldItem.city == newItem.city
+    override fun areContentsTheSame(oldItem: Organization, newItem: Organization): Boolean {
+        return oldItem.name == newItem.name
     }
 }
