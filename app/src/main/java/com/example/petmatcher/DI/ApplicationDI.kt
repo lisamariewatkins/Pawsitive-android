@@ -2,7 +2,6 @@ package com.example.petmatcher.DI
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.example.network.RetrofitFactoryV2
 import com.example.network.animals.AnimalService
@@ -12,8 +11,6 @@ import com.example.network.organizations.OrganizationServiceImpl
 import com.example.petmatcher.BaseApplication
 import com.example.petmatcher.data.AppDatabase
 import com.example.petmatcher.data.FavoriteDao
-import com.example.petmatcher.search.OrganizationRepository
-import com.example.petmatcher.search.OrganizationSearchViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -64,12 +61,6 @@ class ApplicationModule {
     @Provides
     fun providesOrganizationService(retrofitFactoryV2: RetrofitFactoryV2): OrganizationService {
         return OrganizationServiceImpl(retrofitFactoryV2)
-    }
-
-    @Provides
-    fun providesOrganizationsRepository(organizationService: OrganizationService,
-                                        organizationSearchViewModel: OrganizationSearchViewModel): OrganizationRepository {
-        return OrganizationRepository(organizationService, organizationSearchViewModel.viewModelScope)
     }
 
     @Singleton

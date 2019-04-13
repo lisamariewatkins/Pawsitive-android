@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -37,10 +38,11 @@ class OrganizationSearchFragment : Fragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[OrganizationSearchViewModel::class.java]
+
+        val progressBar: ProgressBar = view.findViewById(R.id.org_progress_bar)
 
         // set up pull to refresh
         pullToRefresh = view.findViewById(R.id.shelter_refresh)
@@ -59,8 +61,13 @@ class OrganizationSearchFragment : Fragment(), Injectable {
         }
 
         // observe list of organizations
-        viewModel.organizationsList.observe(viewLifecycleOwner, Observer {
-            organizationListAdapter.submitList(it)
+        viewModel.organizationsList.observe(viewLifecycleOwner, Observer { orgList ->
+            organizationListAdapter.submitList(orgList)
+        })
+
+        // observe network request state for loading indicator
+        viewModel.networkState.observe(viewLifecycleOwner, Observer { networkState ->
+            viewModel.displayViewByNetworkState(pullToRefresh, progressBar, networkState)
         })
 
         return view
