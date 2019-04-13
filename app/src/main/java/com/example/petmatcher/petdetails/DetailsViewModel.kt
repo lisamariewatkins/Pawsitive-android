@@ -1,7 +1,7 @@
 package com.example.petmatcher.petdetails
 
 import androidx.lifecycle.ViewModel
-import com.example.petmatcher.data.FavoritesRepository
+import com.example.petmatcher.favorites.FavoritesRepository
 import javax.inject.Inject
 
 /**

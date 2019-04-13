@@ -2,18 +2,18 @@ package com.example.petmatcher.DI
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import com.example.network.RetrofitFactory
 import com.example.network.RetrofitFactoryV2
 import com.example.network.animals.AnimalService
 import com.example.network.animals.AnimalServiceImpl
 import com.example.network.organizations.OrganizationService
 import com.example.network.organizations.OrganizationServiceImpl
-import com.example.network.shelter.ShelterManager
-import com.example.network.shelter.ShelterManagerImpl
 import com.example.petmatcher.BaseApplication
 import com.example.petmatcher.data.AppDatabase
 import com.example.petmatcher.data.FavoriteDao
+import com.example.petmatcher.search.OrganizationRepository
+import com.example.petmatcher.search.OrganizationSearchViewModel
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -50,14 +50,8 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun providesRetrofitInstance(context: Context): RetrofitFactory {
-        return RetrofitFactory(context)
-    }
-
-    @Singleton
-    @Provides
-    fun providesRetrofitV2Instance(): RetrofitFactoryV2 {
-        return RetrofitFactoryV2()
+    fun providesRetrofitV2Instance(context: Context): RetrofitFactoryV2 {
+        return RetrofitFactoryV2(context)
     }
 
     @Singleton
@@ -72,10 +66,10 @@ class ApplicationModule {
         return OrganizationServiceImpl(retrofitFactoryV2)
     }
 
-    @Singleton
     @Provides
-    fun providesShelterManager(retrofitFactory: RetrofitFactory): ShelterManager {
-        return ShelterManagerImpl(retrofitFactory)
+    fun providesOrganizationsRepository(organizationService: OrganizationService,
+                                        organizationSearchViewModel: OrganizationSearchViewModel): OrganizationRepository {
+        return OrganizationRepository(organizationService, organizationSearchViewModel.viewModelScope)
     }
 
     @Singleton
@@ -89,7 +83,7 @@ class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideUserDao(db: AppDatabase): FavoriteDao {
+    fun provideFavoriteDao(db: AppDatabase): FavoriteDao {
         return db.favoriteDao()
     }
 }

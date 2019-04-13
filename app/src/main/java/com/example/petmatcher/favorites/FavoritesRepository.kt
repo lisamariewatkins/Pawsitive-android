@@ -1,6 +1,8 @@
-package com.example.petmatcher.data
+package com.example.petmatcher.favorites
 
 import com.example.network.animals.Animal
+import com.example.petmatcher.data.Favorite
+import com.example.petmatcher.data.FavoriteDao
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -10,7 +12,8 @@ import javax.inject.Singleton
 class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteDao) {
 
     suspend fun addToFavorites(newPet: Animal) {
-        val favorite = Favorite(newPet.id,
+        val favorite = Favorite(
+            newPet.id,
             newPet.name,
             newPet.description,
             newPet.type,

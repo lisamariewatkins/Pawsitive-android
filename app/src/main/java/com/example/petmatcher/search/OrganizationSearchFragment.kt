@@ -27,9 +27,7 @@ class OrganizationSearchFragment : Fragment(), Injectable {
     private lateinit var shelterRecyclerView: RecyclerView
     private lateinit var organizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>
     private lateinit var shelterLayoutManager: RecyclerView.LayoutManager
-
     private lateinit var pullToRefresh: SwipeRefreshLayout
-
     private lateinit var viewModel: OrganizationSearchViewModel
 
     @Inject
@@ -44,12 +42,14 @@ class OrganizationSearchFragment : Fragment(), Injectable {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[OrganizationSearchViewModel::class.java]
 
+        // set up pull to refresh
         pullToRefresh = view.findViewById(R.id.shelter_refresh)
         pullToRefresh.setOnRefreshListener {
             viewModel.refresh()
             pullToRefresh.isRefreshing = false
         }
 
+        // set up recycler view
         shelterLayoutManager = LinearLayoutManager(context)
         organizationListAdapter = OrganizationListAdapter()
         shelterRecyclerView = view.findViewById<RecyclerView>(R.id.shelter_recycler_view).apply {
@@ -58,11 +58,11 @@ class OrganizationSearchFragment : Fragment(), Injectable {
             adapter = organizationListAdapter
         }
 
+        // observe list of organizations
         viewModel.organizationsList.observe(viewLifecycleOwner, Observer {
             organizationListAdapter.submitList(it)
         })
 
         return view
     }
-
 }

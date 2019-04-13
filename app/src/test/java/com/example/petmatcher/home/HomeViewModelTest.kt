@@ -2,9 +2,9 @@ package com.example.petmatcher.home
 
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.petmatcher.data.FavoritesRepository
+import com.example.petmatcher.favorites.FavoritesRepository
 import com.example.petmatcher.data.MockAnimalJsonResponse
-import com.example.petmatcher.data.AnimalRepository
+import com.example.petmatcher.petdetails.AnimalRepository
 import com.example.petmatcher.memorycache.ImageCache
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import io.mockk.coVerify

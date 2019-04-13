@@ -1,6 +1,10 @@
 package com.example.petmatcher
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -31,6 +35,14 @@ class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+
+        // TODO: examine testability of this implementation
+        val connectionStatus = findViewById<TextView>(R.id.connection_status)
+        val connectivityLiveData = ConnectivityLiveData(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+
+        connectivityLiveData.observe(this, Observer { network ->
+            if (network) connectionStatus.visibility = View.GONE else connectionStatus.visibility = View.VISIBLE
+        })
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

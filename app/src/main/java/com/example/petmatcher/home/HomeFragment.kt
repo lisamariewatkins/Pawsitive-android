@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +27,8 @@ class HomeFragment: Fragment(), Injectable {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val petInfo: ScrollView = view.findViewById(R.id.pet_info)
+        val progressBar: ProgressBar = view.findViewById(R.id.pet_progress_bar)
         val petImage: ImageView = view.findViewById(R.id.pet_image)
         val petNameTextView: TextView = view.findViewById(R.id.pet_name)
         val petDescriptionTextView: TextView = view.findViewById(R.id.pet_description)
@@ -41,9 +40,8 @@ class HomeFragment: Fragment(), Injectable {
             viewModel.showAnimal(pet, petNameTextView, petDescriptionTextView, petImage)
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer {
-            // TODO: Add prettier UI around error handling
-            Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_LONG).show()
+        viewModel.networkState.observe(viewLifecycleOwner, Observer { networkState ->
+            viewModel.displayViewByNetworkState(petLayout = petInfo, progressBar = progressBar, state = networkState)
         })
 
         petImage.setOnClickListener {
@@ -56,4 +54,6 @@ class HomeFragment: Fragment(), Injectable {
 
         return view
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.network
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import com.example.network.petfinderauth.PetFinderAuthService
 import com.example.network.secret.Key
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -17,6 +18,7 @@ const val CLIENT_CREDENTIALS = "client_credentials"
 const val KEY = "key"
 const val FORMAT = "format"
 const val JSON = "json"
+const val ACCESS_TOKEN = "access_token"
 
 @Deprecated("Migration to V2 in progress")
 class RetrofitFactory(val context: Context) {
@@ -58,9 +60,9 @@ class RetrofitFactory(val context: Context) {
 /**
  * Creates retrofit instance for use with all PetFinder API calls
  */
-class RetrofitFactoryV2 {
+class RetrofitFactoryV2(val context: Context) {
     private val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    private val tokenAuthenticator = TokenAuthenticator(retrofitRefresh())
+    private val tokenAuthenticator = TokenAuthenticator(retrofitRefresh(), context)
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
@@ -92,41 +94,44 @@ class RetrofitFactoryV2 {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
+}
+
+/**
+ * Intercept requests and add authorization token
+ */
+class TokenAuthenticator(private val retrofit: Retrofit,
+                         context: Context): Authenticator, Interceptor {
+
+    private val sharedPref = context.getSharedPreferences(ACCESS_TOKEN, MODE_PRIVATE)
+    private var accessToken: String? = sharedPref.getString(ACCESS_TOKEN, null)
+
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+            .newBuilder()
+            .addHeader(AUTHORIZATION, "Bearer $accessToken")
+            .build()
+
+        return chain.proceed(request)
+    }
 
     /**
-     * Intercept requests and add authorization token
+     * Okhttp will automatically ask the [Authenticator] for credentials when the response is 401 Not Authorized and retry
+     * the last failed request with the new credentials
      */
-    class TokenAuthenticator(private val retrofit: Retrofit): Authenticator, Interceptor {
-        // todo save to shared pref maybe?
-        private var accessToken: String? = ""
+    override fun authenticate(route: Route?, response: Response): Request? {
+        val petFinderAuthService = retrofit.create(PetFinderAuthService::class.java)
+        val retrofitResponse = petFinderAuthService.refreshToken(CLIENT_CREDENTIALS, Key.API_KEY_V2, Key.API_SECRET_V2)
 
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request()
-                .newBuilder()
-                .addHeader(AUTHORIZATION, "Bearer $accessToken")
+        accessToken = retrofitResponse.execute().body()?.accessToken
+        sharedPref.edit().putString(ACCESS_TOKEN, accessToken).apply()
+
+        return if (accessToken != null) {
+            // Add new header to rejected request and retry it
+            response.request().newBuilder()
+                .header(AUTHORIZATION, "Bearer $accessToken")
                 .build()
-
-            return chain.proceed(request)
-        }
-
-        /**
-         * Okhttp will automatically ask the [Authenticator] for credentials when the response is 401 Not Authorized and retry
-         * the last failed request with the new credentials
-         */
-        override fun authenticate(route: Route?, response: Response): Request? {
-            val petFinderAuthService = retrofit.create(PetFinderAuthService::class.java)
-            val retrofitResponse = petFinderAuthService.refreshToken(CLIENT_CREDENTIALS, Key.API_KEY_V2, Key.API_SECRET_V2)
-
-            accessToken = retrofitResponse.execute().body()?.accessToken
-
-            return if (accessToken != null) {
-                // Add new header to rejected request and retry it
-                response.request().newBuilder()
-                    .header(AUTHORIZATION, "Bearer $accessToken")
-                    .build()
-            } else {
-                null
-            }
+        } else {
+            null
         }
     }
 }

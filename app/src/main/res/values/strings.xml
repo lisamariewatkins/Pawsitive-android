@@ -6,4 +6,7 @@
     <string name="shelters">Shelters</string>
     <string name="pet_image_content_description">Pet Image</string>
     <string name="error_message">Oops! Something went wrong.</string>
+    <string name="network_connectivity">It appears that your device is offline. Please check your network
+        connectivity.
+    </string>
 </resources>

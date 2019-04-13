@@ -1,5 +1,6 @@
-package com.example.petmatcher.data
+package com.example.petmatcher.petdetails
 
+import android.util.Log
 import com.example.network.animals.AnimalJsonResponse
 import com.example.network.animals.AnimalService
 import kotlinx.coroutines.Deferred
@@ -14,6 +15,7 @@ class AnimalRepository @Inject constructor(private val animalService: AnimalServ
 
     /** Retrieve a list of animals asynchronously from the network **/
     fun getAnimalsAsync(): Deferred<AnimalJsonResponse> {
+        Log.d("AnimalRepo", "Launching network request from " + Thread.currentThread().name)
         return animalService.getAnimalsAsync()
     }
 }
