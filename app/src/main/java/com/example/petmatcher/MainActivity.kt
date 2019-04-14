@@ -1,6 +1,5 @@
 package com.example.petmatcher
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
@@ -24,6 +23,8 @@ import javax.inject.Inject
 class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    @Inject
+    lateinit var connectivityManager: ConnectivityManager
 
     override fun supportFragmentInjector() = dispatchingAndroidInjector
 
@@ -36,13 +37,7 @@ class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
 
-        // TODO: examine testability of this implementation
-        val connectionStatus = findViewById<TextView>(R.id.connection_status)
-        val connectivityLiveData = ConnectivityLiveData(applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-
-        connectivityLiveData.observe(this, Observer { network ->
-            if (network) connectionStatus.visibility = View.GONE else connectionStatus.visibility = View.VISIBLE
-        })
+        setupConnectivityManager()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -75,6 +70,15 @@ class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
             setupActionBarWithNavController(navController)
         })
         currentNavController = controller
+    }
+
+    private fun setupConnectivityManager() {
+        val connectionStatus = findViewById<TextView>(R.id.connection_status)
+        val connectivityLiveData = ConnectivityLiveData(connectivityManager)
+
+        connectivityLiveData.observe(this, Observer { network ->
+            if (network) connectionStatus.visibility = View.GONE else connectionStatus.visibility = View.VISIBLE
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {

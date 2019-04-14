@@ -2,6 +2,7 @@ package com.example.petmatcher.DI
 
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.room.Room
 import com.example.network.RetrofitFactoryV2
 import com.example.network.animals.AnimalService
@@ -61,6 +62,12 @@ class ApplicationModule {
     @Provides
     fun providesOrganizationService(retrofitFactoryV2: RetrofitFactoryV2): OrganizationService {
         return OrganizationServiceImpl(retrofitFactoryV2)
+    }
+
+    @Singleton
+    @Provides
+    fun providesConnectivityManager(context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
     @Singleton

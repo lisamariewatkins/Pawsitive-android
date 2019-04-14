@@ -23,6 +23,7 @@ class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAd
 
     override fun onBindViewHolder(holder: OrganizationViewHolder, position: Int) {
         holder.view.shelter_name.text = getItem(position)?.name
+        holder.view.shelter_city.text = getItem(position)?.address?.city
     }
 }
 

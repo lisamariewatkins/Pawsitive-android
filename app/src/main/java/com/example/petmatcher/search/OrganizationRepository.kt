@@ -12,9 +12,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import javax.inject.Inject
 
+/**
+ * Repository class to retrieve a list of [Organization]s from the network
+ */
+// TODO: Database caching
 class OrganizationRepository @Inject constructor(val organizationDataSourceFactory: OrganizationDataSourceFactory) {
 
-    fun getOrganizations(): LiveData<OrganizationResult<Organization>> {
+    internal fun getOrganizations(): LiveData<OrganizationResult<Organization>> {
         val config = PagedList.Config.Builder()
             .setPageSize(20)
             .setEnablePlaceholders(false)
@@ -38,7 +42,10 @@ class OrganizationRepository @Inject constructor(val organizationDataSourceFacto
         return liveData
     }
 
-    fun cancelAllCoroutineChildren() {
+    /**
+     * Exposes a way to cancel all children of [OrganizationDataSource.coroutineContext] to [OrganizationSearchViewModel]
+     */
+    internal fun cancelAllCoroutineChildren() {
         organizationDataSourceFactory.organizationSource.value?.coroutineContext?.cancelChildren()
     }
 }
