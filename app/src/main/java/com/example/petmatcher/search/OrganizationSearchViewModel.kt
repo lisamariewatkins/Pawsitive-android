@@ -17,11 +17,9 @@ import javax.inject.Inject
  * retransmitted by the switch-mapped [LiveData].
  *
  */
-// TODO: can we figure out how to supply viewModelScope with Dagger?
-class OrganizationSearchViewModel @Inject constructor(organizationService: OrganizationService)
+class OrganizationSearchViewModel @Inject constructor(val organizationRepository: OrganizationRepository)
     : ViewModel() {
 
-    private val organizationRepository = OrganizationRepository(organizationService, viewModelScope)
     private val repoResult = organizationRepository.getOrganizations()
 
     val organizationsList: LiveData<PagedList<Organization>> = Transformations.switchMap(repoResult) {
@@ -30,6 +28,11 @@ class OrganizationSearchViewModel @Inject constructor(organizationService: Organ
 
     val networkState: LiveData<NetworkState> = Transformations.switchMap(repoResult) {
         it.networkState
+    }
+
+    override fun onCleared() {
+        organizationRepository.cancelAllCoroutineChildren()
+        super.onCleared()
     }
 
     /**

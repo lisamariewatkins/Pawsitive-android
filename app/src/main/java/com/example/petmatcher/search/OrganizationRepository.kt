@@ -9,10 +9,10 @@ import com.example.network.organizations.Organization
 import com.example.network.organizations.OrganizationService
 import com.example.petmatcher.data.OrganizationResult
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelChildren
 import javax.inject.Inject
 
-class OrganizationRepository @Inject constructor(organizationService: OrganizationService, scope: CoroutineScope) {
-    private val organizationDataSourceFactory = OrganizationDataSourceFactory(organizationService, scope)
+class OrganizationRepository @Inject constructor(val organizationDataSourceFactory: OrganizationDataSourceFactory) {
 
     fun getOrganizations(): LiveData<OrganizationResult<Organization>> {
         val config = PagedList.Config.Builder()
@@ -36,5 +36,9 @@ class OrganizationRepository @Inject constructor(organizationService: Organizati
         liveData.value = organizations
 
         return liveData
+    }
+
+    fun cancelAllCoroutineChildren() {
+        organizationDataSourceFactory.organizationSource.value?.coroutineContext?.cancelChildren()
     }
 }
