@@ -13,16 +13,16 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.network.organizations.Organization
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
+import com.example.petmatcher.data.api.organizations.Organization
 import javax.inject.Inject
 
 
 /**
  * @author Lisa Watkins
  *
- * Displays list of shelters in a user's area
+ * Displays list of organizations
  */
 class OrganizationSearchFragment : Fragment(), Injectable {
     private lateinit var shelterRecyclerView: RecyclerView

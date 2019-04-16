@@ -6,8 +6,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.network.organizations.Organization
 import com.example.petmatcher.R
+import com.example.petmatcher.data.api.organizations.Organization
 import kotlinx.android.synthetic.main.shelter_list_item.view.*
 
 class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>(OrganizationDiffCallback()) {
@@ -23,10 +23,13 @@ class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAd
 
     override fun onBindViewHolder(holder: OrganizationViewHolder, position: Int) {
         holder.view.shelter_name.text = getItem(position)?.name
-        holder.view.shelter_city.text = getItem(position)?.address?.city
     }
 }
 
+/**
+ * Called when data is updated on a background thread. Checks the new data against existing data to decide whether
+ * or not to add new items.
+ */
 class OrganizationDiffCallback : DiffUtil.ItemCallback<Organization>() {
     override fun areItemsTheSame(oldItem: Organization, newItem: Organization): Boolean {
         return oldItem.id == newItem.id

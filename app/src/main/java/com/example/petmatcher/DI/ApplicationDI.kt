@@ -12,6 +12,7 @@ import com.example.network.organizations.OrganizationServiceImpl
 import com.example.petmatcher.BaseApplication
 import com.example.petmatcher.data.AppDatabase
 import com.example.petmatcher.data.FavoriteDao
+import com.example.petmatcher.data.OrganizationDao
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -83,5 +84,11 @@ class ApplicationModule {
     @Provides
     fun provideFavoriteDao(db: AppDatabase): FavoriteDao {
         return db.favoriteDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideOrganizationDao(db: AppDatabase): OrganizationDao {
+        return db.organizationDao()
     }
 }

@@ -3,9 +3,8 @@ package com.example.petmatcher.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-const val favoritesTableName = "Favorites"
 
-@Entity(tableName = favoritesTableName)
+@Entity(tableName = "Favorites")
 data class Favorite(
     @PrimaryKey val petId: Int,
     val name: String,

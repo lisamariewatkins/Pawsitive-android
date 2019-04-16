@@ -4,9 +4,8 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.lifecycle.*
 import androidx.paging.PagedList
-import com.example.network.organizations.Organization
-import com.example.network.organizations.OrganizationService
 import com.example.petmatcher.data.NetworkState
+import com.example.petmatcher.data.api.organizations.Organization
 import javax.inject.Inject
 
 /**
@@ -17,10 +16,10 @@ import javax.inject.Inject
  * retransmitted by the switch-mapped [LiveData].
  *
  */
-class OrganizationSearchViewModel @Inject constructor(val organizationRepository: OrganizationRepository)
+class OrganizationSearchViewModel @Inject constructor(private val organizationRepository: OrganizationRepository)
     : ViewModel() {
 
-    private val repoResult = organizationRepository.getOrganizations()
+    private val repoResult = organizationRepository.getOrganizationsWithCaching()
 
     val organizationsList: LiveData<PagedList<Organization>> = Transformations.switchMap(repoResult) {
         it.pagedList
@@ -28,6 +27,14 @@ class OrganizationSearchViewModel @Inject constructor(val organizationRepository
 
     val networkState: LiveData<NetworkState> = Transformations.switchMap(repoResult) {
         it.networkState
+    }
+
+    /**
+     * Refresh the data from the network whenever we visit this fragment for the first time. Since the fragment is added
+     * to the backstack when the user navigates away, this should only be called the first time the user visits this screen on app launch.
+     */
+    init {
+        refresh()
     }
 
     override fun onCleared() {
@@ -43,11 +50,18 @@ class OrganizationSearchViewModel @Inject constructor(val organizationRepository
     }
 
     fun displayViewByNetworkState(contentLayout: View, progressBar: ProgressBar, state: NetworkState) {
-        contentLayout.visibility = if (state == NetworkState.SUCCESS) View.VISIBLE else View.GONE
-        progressBar.visibility = if (state == NetworkState.SUCCESS || state == NetworkState.FAILURE) View.GONE else View.VISIBLE
-
-        if (state == NetworkState.FAILURE) {
-            // Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_LONG).show()
+        when (state) {
+            NetworkState.RUNNING -> {
+                contentLayout.visibility = View.GONE
+                progressBar.visibility = View.VISIBLE
+            }
+            NetworkState.SUCCESS -> {
+                contentLayout.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+            }
+            NetworkState.FAILURE -> {
+                // TODO: handle various error states
+            }
         }
     }
 }

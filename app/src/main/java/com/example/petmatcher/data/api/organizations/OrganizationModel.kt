@@ -1,23 +1,14 @@
-package com.example.network.organizations
+package com.example.petmatcher.data.api.organizations
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
+// TODO: Relational database tables for Address, Photos, and Hours
 data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<Organization>,
                                     @field:Json(name = "pagination") val pagination: Pagination)
 
-data class Organization(
-                  @field:Json(name = "id") val id: String,
-                  @field:Json(name = "name") val name: String,
-                  @field:Json(name = "email") val email: String,
-                  @field:Json(name = "phone") val phone: String,
-                  @field:Json(name = "address") val address: Address,
-                  @field:Json(name = "hours") val hours: Hours,
-                  @field:Json(name = "url") val url: String,
-                  @field:Json(name = "website") val website: String,
-                  @field:Json(name = "mission_statement") val missionStatement: String?,
-                  @field:Json(name = "adoption") val adoption: Adoption,
-                  @field:Json(name = "socialMedia") val socialMedia: SocialMedia,
-                  @field:Json(name = "photos") val photos: List<Photo>)
 
 data class Hours(@field:Json(name = "monday") val monday: String?,
                   @field:Json(name = "tuesday") val tuesday: String?,
@@ -41,6 +32,7 @@ data class Photo(@field:Json(name = "small") val small: String,
                  @field:Json(name = "large") val large: String,
                  @field:Json(name = "full") val full: String)
 
+@Entity(tableName = "organizationAddress")
 data class Address(@field:Json(name = "address1") val address1: String,
                    @field:Json(name = "address2") val address2: String,
                    @field:Json(name = "city") val city: String,

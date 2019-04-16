@@ -19,6 +19,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ProgressBar
             android:id="@+id/org_progress_bar"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center"/>
