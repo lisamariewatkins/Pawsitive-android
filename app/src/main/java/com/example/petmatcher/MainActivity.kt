@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.petmatcher.networkutil.ConnectivityLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
@@ -18,7 +19,8 @@ import javax.inject.Inject
 /**
  * @author Lisa Watkins
  *
- * Main activity that hosts navigation graph
+ * Main activity that hosts navigation graphs for all tab bar entry points. The activity also contains a network status
+ * bar that listens for connectivity events via [LiveData] to update the user on their connection status.
  */
 class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
     @Inject
@@ -73,11 +75,13 @@ class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupConnectivityManager() {
-        val connectionStatus = findViewById<TextView>(R.id.connection_status)
+        val connectionStatusBar = findViewById<TextView>(R.id.connection_status)
         val connectivityLiveData = ConnectivityLiveData(connectivityManager)
 
         connectivityLiveData.observe(this, Observer { network ->
-            if (network) connectionStatus.visibility = View.GONE else connectionStatus.visibility = View.VISIBLE
+            connectionStatusBar.apply {
+                visibility = if (network) View.GONE else View.VISIBLE
+            }
         })
     }
 

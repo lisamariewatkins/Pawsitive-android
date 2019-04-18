@@ -13,6 +13,7 @@ import com.example.petmatcher.BaseApplication
 import com.example.petmatcher.data.AppDatabase
 import com.example.petmatcher.data.FavoriteDao
 import com.example.petmatcher.data.OrganizationDao
+import com.example.petmatcher.imageutil.ImageLoader
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -69,6 +70,12 @@ class ApplicationModule {
     @Provides
     fun providesConnectivityManager(context: Context): ConnectivityManager {
         return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Singleton
+    @Provides
+    fun providesImageLoader(context: Context): ImageLoader {
+        return ImageLoader(context)
     }
 
     @Singleton

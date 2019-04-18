@@ -10,16 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
-import com.example.petmatcher.data.Favorite
 import com.example.petmatcher.favorites.FavoritesListAdapter.Companion.PET_ID_KEY
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 
-class DetailsFragment : Fragment(), Injectable {
+class DetailsFragment: Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -31,20 +29,23 @@ class DetailsFragment : Fragment(), Injectable {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_details, container, false)
-        val petImage = view.findViewById<ImageView>(R.id.pet_image)
+        val petImageView = view.findViewById<ImageView>(R.id.pet_image)
         val petName = view.findViewById<TextView>(R.id.pet_name)
         val petDescription = view.findViewById<TextView>(R.id.pet_description)
-        val petId = arguments?.getString(PET_ID_KEY) ?: "" // todo error handling
+        val petId = arguments?.getInt(PET_ID_KEY) ?: throw IllegalArgumentException("Pet ID must not be null.")
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[DetailsViewModel::class.java]
 
-        viewModel.getPet(petId).observe(this, Observer {favorite ->
-            petName.text = favorite.name
-            petDescription.text = favorite.description
+        viewModel.errorState.observe(viewLifecycleOwner, Observer {
+            // TODO: Come up with an error state if pet isn't in local db
+        })
 
-            Glide.with(petImage.context)
-                .load(favorite.imageUrl)
-                .into(petImage)
+        viewModel.getPet(petId).observe(viewLifecycleOwner, Observer {favorite ->
+            viewModel.loadPet(
+                petImageView = petImageView,
+                petNameTextView = petName,
+                petDescriptionTextView = petDescription,
+                favorite = favorite)
         })
 
         return view

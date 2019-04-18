@@ -4,8 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.petmatcher.favorites.FavoritesRepository
 import com.example.petmatcher.data.MockAnimalJsonResponse
-import com.example.petmatcher.petdetails.AnimalRepository
-import com.example.petmatcher.memorycache.ImageCache
+import com.example.petmatcher.imageutil.ImageCache
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import io.mockk.coVerify
 import io.mockk.every

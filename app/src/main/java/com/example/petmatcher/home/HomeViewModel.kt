@@ -7,14 +7,12 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.network.animals.Animal
 import com.example.petmatcher.R
-import com.example.petmatcher.petdetails.AnimalRepository
 import com.example.petmatcher.favorites.FavoritesRepository
-import com.example.petmatcher.data.NetworkState
-import com.example.petmatcher.memorycache.ImageCache
+import com.example.petmatcher.networkutil.NetworkState
+import com.example.petmatcher.imageutil.ImageCache
+import com.example.petmatcher.imageutil.ImageLoader
 import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
@@ -24,7 +22,8 @@ import javax.inject.Inject
  */
 class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepository,
                                         private val favoritesRepository: FavoritesRepository,
-                                        private val imageCache: ImageCache
+                                        private val imageCache: ImageCache,
+                                        private val imageLoader: ImageLoader
 ): ViewModel() {
     val currentAnimal = MutableLiveData<Animal>()
     val networkState = MutableLiveData<NetworkState>()
@@ -40,7 +39,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
 
     //region I/O
     fun nextAnimal() {
-        if (!animalList.isEmpty()) {
+        if (animalList.isNotEmpty()) {
             currentAnimal.value = animalList.pollFirst()
         } else {
             loadAnimals()
@@ -86,39 +85,49 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
     //endregion
 
     //region UI
-    fun showAnimal(animal: Animal, petNameTextView: TextView, petDescriptionTextView: TextView, petImage: ImageView) {
-        val petName = animal.name
-        val petDescription = animal.description
-
-        if (!animal.photos.isEmpty()) {
-            val imageUrl = animal.photos[0].large
-            loadImage(petImage, imageUrl, animal.id)
+    fun showAnimal(animal: Animal, petNameTextView: TextView, petDescriptionTextView: TextView, petImageView: ImageView) {
+        if (animal.photos.isNotEmpty()) {
+            // TODO: Will all responses have a large image?
+            loadImage(petImageView = petImageView, imageUrl = animal.photos[0].large, id = animal.id)
+        } else {
+            petImageView.setImageResource(R.drawable.ic_placeholder_image)
         }
 
-        petNameTextView.text = petName
-        petDescriptionTextView.text = petDescription
+        petNameTextView.text = animal.name
+        petDescriptionTextView.text = animal.description
     }
 
-    fun displayViewByNetworkState(petLayout: ScrollView, progressBar: ProgressBar, state: NetworkState) {
-        petLayout.visibility = if (state == NetworkState.SUCCESS) View.VISIBLE else View.GONE
-        progressBar.visibility = if (state == NetworkState.SUCCESS || state == NetworkState.FAILURE) View.GONE else View.VISIBLE
-
-        if (state == NetworkState.FAILURE) {
-            // Toast.makeText(context, getString(R.string.error_message), Toast.LENGTH_LONG).show()
+    // TODO: How can we simplify this?
+    fun displayViewByNetworkState(petLayout: ScrollView, loadingLayout: FrameLayout, state: NetworkState) {
+        when (state) {
+            NetworkState.SUCCESS -> {
+                petLayout.visibility = View.VISIBLE
+                loadingLayout.visibility = View.GONE
+            }
+            NetworkState.RUNNING -> {
+                petLayout.visibility = View.GONE
+                loadingLayout.visibility = View.VISIBLE
+                loadingLayout.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.VISIBLE
+                loadingLayout.findViewById<LinearLayout>(R.id.network_error).visibility = View.GONE
+            }
+            NetworkState.FAILURE -> {
+                petLayout.visibility = View.GONE
+                loadingLayout.visibility = View.VISIBLE
+                loadingLayout.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
+                loadingLayout.findViewById<LinearLayout>(R.id.network_error).visibility = View.VISIBLE
+            }
         }
     }
 
-    // TODO: Handle null images from server
-    private fun loadImage(petImage: ImageView, imageUrl: String?, id: Int) {
+    private fun loadImage(petImageView: ImageView, imageUrl: String, id: Int) {
         imageCache.getImage(id)?.let {
-            petImage.setImageDrawable(it)
+            petImageView.setImageDrawable(it)
         } ?: run {
-            val options = RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.ic_placeholder_image)
-                .error(R.drawable.ic_placeholder_image)
-
-            Glide.with(petImage.context).load(imageUrl).apply(options).into(petImage)
+            imageLoader.loadImageIntoView(
+                url = imageUrl,
+                imageView = petImageView,
+                placeholderId = R.drawable.ic_placeholder_image,
+                errorImageId = R.drawable.ic_placeholder_image)
         }
     }
     //endregion

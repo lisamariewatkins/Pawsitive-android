@@ -1,5 +1,6 @@
 package com.example.petmatcher.data.api.organizations
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
@@ -8,6 +9,29 @@ import com.squareup.moshi.Json
 // TODO: Relational database tables for Address, Photos, and Hours
 data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<Organization>,
                                     @field:Json(name = "pagination") val pagination: Pagination)
+
+/**
+ * @author Lisa Watkins
+ *
+ * Entity that represents an organizations table in the database.
+ */
+// TODO: Figure out how to add the list of photo urls to database
+@Entity(tableName = "organizations")
+data class Organization(
+    @PrimaryKey
+    @field:Json(name = "id") val id: String,
+    @field:Json(name = "name") val name: String?,
+    @field:Json(name = "email") val email: String?,
+    @field:Json(name = "phone") val phone: String?,
+    @Embedded
+    @field:Json(name = "address") val address: Address?,
+    @Embedded
+    @field:Json(name = "hours") val hours: Hours?,
+    @field:Json(name = "url") val url: String?,
+    @Embedded
+    @field:Json(name = "social_media") val socialMedia: SocialMedia?,
+    @field:Json(name = "website") val website: String?,
+    @field:Json(name = "mission_statement") val missionStatement: String?)
 
 
 data class Hours(@field:Json(name = "monday") val monday: String?,
@@ -21,24 +45,23 @@ data class Hours(@field:Json(name = "monday") val monday: String?,
 data class Adoption(@field:Json(name = "policy") val primary: String?,
                   @field:Json(name = "url") val secondary: String?)
 
-data class SocialMedia(@field:Json(name = "facebook") val facebook: Boolean,
-                      @field:Json(name = "twitter") val twitter: Boolean,
-                      @field:Json(name = "youtube") val youtube: Boolean?,
-                      @field:Json(name = "instagram") val instagram: Boolean,
-                      @field:Json(name = "pinterest") val pinterest: Boolean)
+data class SocialMedia(@field:Json(name = "facebook") val facebook: String?,
+                      @field:Json(name = "twitter") val twitter: String?,
+                      @field:Json(name = "youtube") val youtube: String?,
+                      @field:Json(name = "instagram") val instagram: String?,
+                      @field:Json(name = "pinterest") val pinterest: String?)
 
 data class Photo(@field:Json(name = "small") val small: String,
                  @field:Json(name = "medium") val medium: String,
                  @field:Json(name = "large") val large: String,
                  @field:Json(name = "full") val full: String)
 
-@Entity(tableName = "organizationAddress")
-data class Address(@field:Json(name = "address1") val address1: String,
-                   @field:Json(name = "address2") val address2: String,
-                   @field:Json(name = "city") val city: String,
-                   @field:Json(name = "state") val state: String,
-                   @field:Json(name = "postcode") val postcode: String,
-                   @field:Json(name = "country") val country: String)
+data class Address(@field:Json(name = "address1") val address1: String?,
+                   @field:Json(name = "address2") val address2: String?,
+                   @field:Json(name = "city") val city: String?,
+                   @field:Json(name = "state") val state: String?,
+                   @field:Json(name = "postcode") val postcode: String?,
+                   @field:Json(name = "country") val country: String?)
 
 data class Pagination(@field:Json(name = "count_per_page") val countPerPage: Int,
                       @field:Json(name = "total_count") val totalCount: Int,

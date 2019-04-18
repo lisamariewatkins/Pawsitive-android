@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
 /**
@@ -28,11 +29,12 @@ class HomeFragment: Fragment(), Injectable {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val petInfo: ScrollView = view.findViewById(R.id.pet_info)
-        val progressBar: ProgressBar = view.findViewById(R.id.pet_progress_bar)
+        val loadingLayout: FrameLayout = view.findViewById(R.id.loading_layout)
         val petImage: ImageView = view.findViewById(R.id.pet_image)
         val petNameTextView: TextView = view.findViewById(R.id.pet_name)
         val petDescriptionTextView: TextView = view.findViewById(R.id.pet_description)
-        val matchButton: Button = view.findViewById(R.id.match_button)
+        val matchButton: FloatingActionButton = view.findViewById(R.id.match_button)
+        val nextButton: FloatingActionButton = view.findViewById(R.id.next_button)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[HomeViewModel::class.java]
 
@@ -41,10 +43,13 @@ class HomeFragment: Fragment(), Injectable {
         })
 
         viewModel.networkState.observe(viewLifecycleOwner, Observer { networkState ->
-            viewModel.displayViewByNetworkState(petLayout = petInfo, progressBar = progressBar, state = networkState)
+            viewModel.displayViewByNetworkState(
+                petLayout = petInfo,
+                loadingLayout = loadingLayout,
+                state = networkState)
         })
 
-        petImage.setOnClickListener {
+        nextButton.setOnClickListener {
             viewModel.nextAnimal()
         }
 

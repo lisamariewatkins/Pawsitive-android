@@ -7,7 +7,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.network.organizations.OrganizationService
 import com.example.petmatcher.data.AppDatabase
-import com.example.petmatcher.data.Result
+import com.example.petmatcher.networkutil.NetworkState
+import com.example.petmatcher.networkutil.Result
 import com.example.petmatcher.data.api.organizations.Organization
 import com.example.petmatcher.data.api.organizations.OrganizationJsonResponse
 import kotlinx.coroutines.*
@@ -15,18 +16,21 @@ import java.lang.Exception
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
+const val TAG = "OrganizationRepository"
+
 /**
  * Repository class to retrieve a list of [Organization]s from the network
  */
-class OrganizationRepository @Inject constructor(private val db: AppDatabase,
-                                                 private val organizationService: OrganizationService,
+// TODO: Why is the PageList jumping?
+class OrganizationRepository @Inject constructor(private val organizationService: OrganizationService,
                                                  val database: AppDatabase): CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
 
+    private val networkState = MutableLiveData<NetworkState>()
     private var lastRequestedPage = 1
 
-    fun getOrganizationsWithCaching(): LiveData<Result<Organization>> {
+    fun getOrganizationsWithCaching(): LiveData<Result<LiveData<PagedList<Organization>>>> {
         val boundaryCallback = OrganizationBoundaryCallback(this::requestByPage)
 
         val config = PagedList.Config.Builder()
@@ -38,53 +42,80 @@ class OrganizationRepository @Inject constructor(private val db: AppDatabase,
             .setBoundaryCallback(boundaryCallback)
             .build()
 
-        val organizations =  Result(
+        val organizations = Result(
             pagedList = livePagedList,
-            networkState = boundaryCallback.networkState,
+            networkState = networkState,
             refresh = {
-                lastRequestedPage = 1
-                requestByPage(refresh = true)
-            }
-        )
+                refresh()
+            },
+            retry = {
+                refresh()
+            })
 
-        val liveData = MutableLiveData<Result<Organization>>()
-        liveData.value = organizations
-
-        return liveData
+        return MutableLiveData<Result<LiveData<PagedList<Organization>>>>().apply {
+            value = organizations
+        }
     }
 
-    // TODO: Can we use default parameters?
-    private fun requestByPage(refresh: Boolean) {
+    private fun refresh() {
+        networkState.postValue(NetworkState.RUNNING)
+        lastRequestedPage = 1
         launch {
+            Log.d(TAG, "Requesting to refresh organizations from " + Thread.currentThread().name)
             try {
-                // parse response
                 val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
-                // clear database if refresh
-                if (refresh) db.organizationDao().deleteAllOrganizations()
-                // update db with result
-                insertResultIntoDb(response)
+                refreshDatabase(response)
+                networkState.postValue(NetworkState.SUCCESS)
             } catch (e: Exception) {
-                Log.d("Repo", "Error fetching organizations " + e.localizedMessage)
+                Log.d(TAG, "Error fetching organizations " + e.localizedMessage)
+                networkState.postValue(NetworkState.FAILURE)
             }
         }
     }
 
-    private fun insertResultIntoDb(body: OrganizationJsonResponse?) {
-        body?.organizations?.let { organizations ->
+    private fun requestByPage() {
+        launch {
+            Log.d(TAG, "Requesting organizations from " + Thread.currentThread().name)
             try {
-                db.runInTransaction {
-                    db.organizationDao().insert(organizations)
-                }
+                val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
+                insertResultIntoDb(response)
             } catch (e: Exception) {
-                Log.d("OrganizationRepository", e.localizedMessage)
+                Log.d(TAG, "Error fetching organizations " + e.localizedMessage)
+            }
+        }
+    }
+
+    private suspend fun refreshDatabase(body: OrganizationJsonResponse?) {
+        body?.organizations?.let {
+            withContext(Dispatchers.IO) {
+                Log.d(TAG, "Refreshing organizations in database from " + Thread.currentThread().name)
+                database.runInTransaction {
+                    database.organizationDao().deleteAllOrganizations()
+                }
+                insertResultIntoDb(body)
+            }
+        }
+    }
+
+    private suspend fun insertResultIntoDb(body: OrganizationJsonResponse?) {
+        body?.organizations?.let { organizations ->
+            withContext(Dispatchers.IO) {
+                Log.d(TAG, "Inserting organizations in database from " + Thread.currentThread().name)
+                try {
+                    database.runInTransaction {
+                        database.organizationDao().insert(organizations)
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, e.localizedMessage)
+                }
             }
         }
     }
 
     /**
-     * Exposes a way to cancel all children of [OrganizationDataSource.coroutineContext] to [OrganizationSearchViewModel]
+     * Exposes a way to cancel all children of [coroutineContext] so we can link to a lifecycle somewhere
      */
-    internal fun cancelAllCoroutineChildren() {
+    internal fun clear() {
         coroutineContext.cancelChildren()
     }
 }

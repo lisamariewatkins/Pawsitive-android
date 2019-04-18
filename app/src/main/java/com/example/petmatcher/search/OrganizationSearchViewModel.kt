@@ -1,10 +1,14 @@
 package com.example.petmatcher.search
 
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.lifecycle.*
 import androidx.paging.PagedList
-import com.example.petmatcher.data.NetworkState
+import com.example.petmatcher.R
+import com.example.petmatcher.networkutil.NetworkState
 import com.example.petmatcher.data.api.organizations.Organization
 import javax.inject.Inject
 
@@ -37,11 +41,6 @@ class OrganizationSearchViewModel @Inject constructor(private val organizationRe
         refresh()
     }
 
-    override fun onCleared() {
-        organizationRepository.cancelAllCoroutineChildren()
-        super.onCleared()
-    }
-
     /**
      * Refresh organizations list by invalidating the data source.
      */
@@ -49,19 +48,32 @@ class OrganizationSearchViewModel @Inject constructor(private val organizationRe
         repoResult.value?.refresh?.invoke()
     }
 
-    fun displayViewByNetworkState(contentLayout: View, progressBar: ProgressBar, state: NetworkState) {
+    fun retry() {
+        repoResult.value?.retry?.invoke()
+    }
+
+    fun displayViewByNetworkState(contentLayout: View, loadingLayout: FrameLayout, state: NetworkState) {
         when (state) {
             NetworkState.RUNNING -> {
                 contentLayout.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
+                loadingLayout.visibility = View.VISIBLE
+                loadingLayout.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.VISIBLE
+                loadingLayout.findViewById<LinearLayout>(R.id.network_error).visibility = View.GONE
             }
             NetworkState.SUCCESS -> {
+                loadingLayout.visibility = View.GONE
                 contentLayout.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
             }
             NetworkState.FAILURE -> {
-                // TODO: handle various error states
+                contentLayout.visibility = View.VISIBLE
+                loadingLayout.visibility = View.GONE
+                // TODO: Discern between empty and non empty cache
             }
         }
+    }
+
+    override fun onCleared() {
+        organizationRepository.clear()
+        super.onCleared()
     }
 }

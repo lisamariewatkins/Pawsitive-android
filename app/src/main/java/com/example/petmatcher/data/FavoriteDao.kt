@@ -12,7 +12,7 @@ interface FavoriteDao {
     fun getFavorites(): LiveData<List<Favorite>>
 
     @Query("SELECT * FROM Favorites WHERE petId=:id LIMIT 1")
-    fun getFavorite(id: String): LiveData<Favorite>
+    fun getFavorite(id: Int): LiveData<Favorite>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(favorite: Favorite)

@@ -1,4 +1,4 @@
-package com.example.petmatcher.petdetails
+package com.example.petmatcher.home
 
 import android.util.Log
 import com.example.network.animals.AnimalJsonResponse
