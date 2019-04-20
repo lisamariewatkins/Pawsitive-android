@@ -5,14 +5,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:padding="@dimen/small_padding">
 
     <TextView
             android:id="@+id/favorite_name"
             tools:text="Kitty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="@dimen/title_font_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -23,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Maine Coon"
+            android:textSize="@dimen/subtitle_font_size"
             app:layout_constraintTop_toBottomOf="@id/favorite_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

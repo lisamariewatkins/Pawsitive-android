@@ -1,0 +1,222 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "7a9178ee712addea826b1bcbae88a986",
+    "entities": [
+      {
+        "tableName": "Favorites",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`petId` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `breed` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, PRIMARY KEY(`petId`))",
+        "fields": [
+          {
+            "fieldPath": "petId",
+            "columnName": "petId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "breed",
+            "columnName": "breed",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "petId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "organizations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `email` TEXT, `phone` TEXT, `url` TEXT, `website` TEXT, `missionStatement` TEXT, `address1` TEXT, `address2` TEXT, `city` TEXT, `state` TEXT, `postcode` TEXT, `country` TEXT, `monday` TEXT, `tuesday` TEXT, `wednesday` TEXT, `thursday` TEXT, `friday` TEXT, `saturday` TEXT, `sunday` TEXT, `facebook` TEXT, `twitter` TEXT, `youtube` TEXT, `instagram` TEXT, `pinterest` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "website",
+            "columnName": "website",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "missionStatement",
+            "columnName": "missionStatement",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.address1",
+            "columnName": "address1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.address2",
+            "columnName": "address2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.postcode",
+            "columnName": "postcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.monday",
+            "columnName": "monday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.tuesday",
+            "columnName": "tuesday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.wednesday",
+            "columnName": "wednesday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.thursday",
+            "columnName": "thursday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.friday",
+            "columnName": "friday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.saturday",
+            "columnName": "saturday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours.sunday",
+            "columnName": "sunday",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialMedia.facebook",
+            "columnName": "facebook",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialMedia.twitter",
+            "columnName": "twitter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialMedia.youtube",
+            "columnName": "youtube",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialMedia.instagram",
+            "columnName": "instagram",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialMedia.pinterest",
+            "columnName": "pinterest",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7a9178ee712addea826b1bcbae88a986\")"
+    ]
+  }
+}

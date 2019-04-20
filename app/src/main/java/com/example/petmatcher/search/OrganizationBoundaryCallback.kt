@@ -2,26 +2,33 @@ package com.example.petmatcher.search
 
 import androidx.paging.PagedList
 import com.example.petmatcher.data.api.organizations.Organization
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author Lisa Watkins
  *
  * Paging boundary callback for Organizations list.
  */
-class OrganizationBoundaryCallback(val requestByPage: () -> Unit)
+class OrganizationBoundaryCallback(val requestByPage: suspend () -> Unit,
+                                   private val coroutineScope: CoroutineScope)
     : PagedList.BoundaryCallback<Organization>() {
 
     /**
      * Called when zero items are returned from the database
      */
     override fun onZeroItemsLoaded() {
-        requestByPage()
+        coroutineScope.launch {
+            requestByPage()
+        }
     }
 
     /**
      * Called when the last item in the database is loaded
      */
     override fun onItemAtEndLoaded(itemAtEnd: Organization) {
-        requestByPage()
+        coroutineScope.launch {
+            requestByPage()
+        }
     }
 }

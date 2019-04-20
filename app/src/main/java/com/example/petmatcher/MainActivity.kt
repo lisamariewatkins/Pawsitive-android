@@ -4,6 +4,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -22,7 +23,7 @@ import javax.inject.Inject
  * Main activity that hosts navigation graphs for all tab bar entry points. The activity also contains a network status
  * bar that listens for connectivity events via [LiveData] to update the user on their connection status.
  */
-class MainActivity: DaggerAppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity: AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject

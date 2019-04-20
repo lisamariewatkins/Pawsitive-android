@@ -1,7 +1,7 @@
-package com.example.petmatcher.data
+package com.example.petmatcher.home
 
 import com.example.network.animals.AnimalService
-import com.example.petmatcher.home.AnimalRepository
+import com.example.petmatcher.data.MockAnimalJsonResponse
 import io.mockk.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi

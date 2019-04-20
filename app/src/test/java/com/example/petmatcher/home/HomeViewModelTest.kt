@@ -5,6 +5,7 @@ import android.widget.TextView
 import com.example.petmatcher.favorites.FavoritesRepository
 import com.example.petmatcher.data.MockAnimalJsonResponse
 import com.example.petmatcher.imageutil.ImageCache
+import com.example.petmatcher.imageutil.ImageLoader
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import io.mockk.coVerify
 import io.mockk.every
@@ -27,6 +28,7 @@ class HomeViewModelTest {
     val mockAnimalRepository: AnimalRepository = mockk()
     val mockFavoriteRepository: FavoritesRepository = mockk(relaxed = true)
     val mockImageCache: ImageCache = mockk(relaxed = true)
+    val mockImageLoader: ImageLoader = mockk()
 
     lateinit var viewModel: HomeViewModel
 
@@ -59,7 +61,7 @@ class HomeViewModelTest {
             } returns mockJsonData
 
             // Exercise
-            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache, mockImageLoader)
 
             // Assert
             val expected = mockJsonData.getCompleted()
@@ -69,9 +71,7 @@ class HomeViewModelTest {
                 Assert.assertEquals(expected.animals[0], it)
             }
 
-            coVerify {
-                mockImageCache.cacheImages(any())
-            }
+            coVerify { mockImageCache.cacheImages(any()) }
         }
 
         // todo handle network failure
@@ -88,16 +88,14 @@ class HomeViewModelTest {
                 mockAnimalRepository.getAnimalsAsync()
             } returns mockJsonData
 
-            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache, mockImageLoader)
 
             viewModel.currentAnimal.observeForever {
                 // Exercise
                 viewModel.addCurrentAnimalToFavorites()
 
                 // Assert
-                coVerify {
-                    mockFavoriteRepository.addToFavorites(it)
-                }
+                coVerify { mockFavoriteRepository.addToFavorites(it) }
             }
         }
 
@@ -110,7 +108,7 @@ class HomeViewModelTest {
                 mockAnimalRepository.getAnimalsAsync()
             } returns mockJsonData
 
-            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache)
+            viewModel = HomeViewModel(mockAnimalRepository, mockFavoriteRepository, mockImageCache, mockImageLoader)
 
             val mockPetNameTextView: TextView = mockk(relaxed = true)
             val mockPetDescriptionTextView: TextView = mockk(relaxed = true)

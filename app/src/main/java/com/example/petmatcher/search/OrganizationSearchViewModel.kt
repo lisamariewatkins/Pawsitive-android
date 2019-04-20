@@ -10,6 +10,7 @@ import androidx.paging.PagedList
 import com.example.petmatcher.R
 import com.example.petmatcher.networkutil.NetworkState
 import com.example.petmatcher.data.api.organizations.Organization
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -41,15 +42,14 @@ class OrganizationSearchViewModel @Inject constructor(private val organizationRe
         refresh()
     }
 
-    /**
-     * Refresh organizations list by invalidating the data source.
-     */
     fun refresh() {
-        repoResult.value?.refresh?.invoke()
+        viewModelScope.launch {
+            organizationRepository.refresh()
+        }
     }
 
     fun retry() {
-        repoResult.value?.retry?.invoke()
+        // TODO: Implement
     }
 
     fun displayViewByNetworkState(contentLayout: View, loadingLayout: FrameLayout, state: NetworkState) {

@@ -7,9 +7,12 @@ import com.example.petmatcher.search.OrganizationSearchFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-/*
-*  Any injectable fragments must be provided here
-*/
+/**
+ * Any fragment that needs to be injected should be provided here.
+ *
+ * This module is references by MainActivity's AndroidInjector. The providers for these fragments are initialized when MainActivity's
+ * component (i.e. subcomponent) is initialized.
+ */
 @Module
 abstract class FragmentBuildersModule {
     @ContributesAndroidInjector

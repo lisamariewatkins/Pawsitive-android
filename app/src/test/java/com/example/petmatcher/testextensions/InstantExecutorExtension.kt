@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 /**
  * This extension helps test with LiveData - faking out that we are running on the main thread.
  */
-class InstantExecutorExtension : BeforeEachCallback, AfterEachCallback {
+class InstantExecutorExtension: BeforeEachCallback, AfterEachCallback {
 
     override fun beforeEach(context: ExtensionContext?) {
         ArchTaskExecutor.getInstance()

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ class FavoritesFragment: Fragment(), Injectable {
         recyclerView = view.findViewById<RecyclerView>(R.id.favorites_recycler_view).apply {
             // improves performance for fixed size recycler views
             setHasFixedSize(true)
+            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
             layoutManager = viewManager
             adapter = viewAdapter
         }

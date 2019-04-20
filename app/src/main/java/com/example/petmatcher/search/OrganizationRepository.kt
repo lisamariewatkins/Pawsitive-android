@@ -1,16 +1,17 @@
 package com.example.petmatcher.search
 
-import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.network.organizations.OrganizationService
-import com.example.petmatcher.data.AppDatabase
+import com.example.petmatcher.data.OrganizationDao
 import com.example.petmatcher.networkutil.NetworkState
 import com.example.petmatcher.networkutil.Result
 import com.example.petmatcher.data.api.organizations.Organization
 import com.example.petmatcher.data.api.organizations.OrganizationJsonResponse
+import com.example.petmatcher.util.Logger
 import kotlinx.coroutines.*
 import java.lang.Exception
 import javax.inject.Inject
@@ -23,22 +24,24 @@ const val TAG = "OrganizationRepository"
  */
 // TODO: Why is the PageList jumping?
 class OrganizationRepository @Inject constructor(private val organizationService: OrganizationService,
-                                                 val database: AppDatabase): CoroutineScope {
+                                                 val organizationDao: OrganizationDao,
+                                                 val logger: Logger): CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
 
-    private val networkState = MutableLiveData<NetworkState>()
+    @VisibleForTesting
+    internal val networkState = MutableLiveData<NetworkState>()
     private var lastRequestedPage = 1
 
     fun getOrganizationsWithCaching(): LiveData<Result<LiveData<PagedList<Organization>>>> {
-        val boundaryCallback = OrganizationBoundaryCallback(this::requestByPage)
+        val boundaryCallback = OrganizationBoundaryCallback(this::requestByPage, this)
 
         val config = PagedList.Config.Builder()
             .setPageSize(20)
             .setEnablePlaceholders(false)
             .build()
 
-        val livePagedList = LivePagedListBuilder(database.organizationDao().getAllOrganizations(), config)
+        val livePagedList = LivePagedListBuilder(organizationDao.getAllOrganizations(), config)
             .setBoundaryCallback(boundaryCallback)
             .build()
 
@@ -46,10 +49,10 @@ class OrganizationRepository @Inject constructor(private val organizationService
             pagedList = livePagedList,
             networkState = networkState,
             refresh = {
-                refresh()
+                // refresh()
             },
             retry = {
-                refresh()
+                // TODO: Implement this
             })
 
         return MutableLiveData<Result<LiveData<PagedList<Organization>>>>().apply {
@@ -57,41 +60,35 @@ class OrganizationRepository @Inject constructor(private val organizationService
         }
     }
 
-    private fun refresh() {
+    internal suspend fun refresh() {
         networkState.postValue(NetworkState.RUNNING)
         lastRequestedPage = 1
-        launch {
-            Log.d(TAG, "Requesting to refresh organizations from " + Thread.currentThread().name)
-            try {
-                val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
-                refreshDatabase(response)
-                networkState.postValue(NetworkState.SUCCESS)
-            } catch (e: Exception) {
-                Log.d(TAG, "Error fetching organizations " + e.localizedMessage)
-                networkState.postValue(NetworkState.FAILURE)
-            }
+        logger.d(TAG, "Requesting to refresh organizations from " + Thread.currentThread().name)
+        try {
+            val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
+            refreshDatabase(response)
+            networkState.postValue(NetworkState.SUCCESS)
+        } catch (e: Exception) {
+            logger.d(TAG, "Error fetching organizations " + e.localizedMessage)
+            networkState.postValue(NetworkState.FAILURE)
         }
     }
 
-    private fun requestByPage() {
-        launch {
-            Log.d(TAG, "Requesting organizations from " + Thread.currentThread().name)
-            try {
-                val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
-                insertResultIntoDb(response)
-            } catch (e: Exception) {
-                Log.d(TAG, "Error fetching organizations " + e.localizedMessage)
-            }
+    internal suspend fun requestByPage() {
+        logger.d(TAG, "Requesting organizations from " + Thread.currentThread().name)
+        try {
+            val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
+            insertResultIntoDb(response)
+        } catch (e: Exception) {
+            logger.d(TAG, "Error fetching organizations " + e.localizedMessage)
         }
     }
 
     private suspend fun refreshDatabase(body: OrganizationJsonResponse?) {
         body?.organizations?.let {
             withContext(Dispatchers.IO) {
-                Log.d(TAG, "Refreshing organizations in database from " + Thread.currentThread().name)
-                database.runInTransaction {
-                    database.organizationDao().deleteAllOrganizations()
-                }
+                logger.d(TAG, "Refreshing organizations in database from " + Thread.currentThread().name)
+                organizationDao.deleteAllOrganizations()
                 insertResultIntoDb(body)
             }
         }
@@ -100,13 +97,11 @@ class OrganizationRepository @Inject constructor(private val organizationService
     private suspend fun insertResultIntoDb(body: OrganizationJsonResponse?) {
         body?.organizations?.let { organizations ->
             withContext(Dispatchers.IO) {
-                Log.d(TAG, "Inserting organizations in database from " + Thread.currentThread().name)
+                logger.d(TAG, "Inserting organizations in database from " + Thread.currentThread().name)
                 try {
-                    database.runInTransaction {
-                        database.organizationDao().insert(organizations)
-                    }
+                    organizationDao.insert(organizations)
                 } catch (e: Exception) {
-                    Log.d(TAG, e.localizedMessage)
+                    logger.d(TAG, e.localizedMessage)
                 }
             }
         }

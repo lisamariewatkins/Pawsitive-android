@@ -21,7 +21,6 @@ class FavoritesListAdapter: ListAdapter<Favorite, FavoritesListAdapter.Favorites
 
     class FavoritesViewHolder(val view: ConstraintLayout): RecyclerView.ViewHolder(view)
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.favorites_list_item, parent, false) as ConstraintLayout
