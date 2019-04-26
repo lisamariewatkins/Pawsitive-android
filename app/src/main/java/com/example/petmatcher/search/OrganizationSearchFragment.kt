@@ -75,7 +75,7 @@ class OrganizationSearchFragment : Fragment(), Injectable {
         })
 
         loadingLayout.findViewById<Button>(R.id.retry_button).setOnClickListener {
-            viewModel.retry()
+            viewModel.refresh()
         }
 
         return view

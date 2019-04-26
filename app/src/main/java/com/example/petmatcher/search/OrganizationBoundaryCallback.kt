@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
  *
  * Paging boundary callback for Organizations list.
  */
-class OrganizationBoundaryCallback(val requestByPage: suspend () -> Unit,
+class OrganizationBoundaryCallback(val requestByPage: suspend (Boolean) -> Unit,
                                    private val coroutineScope: CoroutineScope)
     : PagedList.BoundaryCallback<Organization>() {
 
@@ -19,7 +19,7 @@ class OrganizationBoundaryCallback(val requestByPage: suspend () -> Unit,
      */
     override fun onZeroItemsLoaded() {
         coroutineScope.launch {
-            requestByPage()
+            requestByPage(false)
         }
     }
 
@@ -28,7 +28,7 @@ class OrganizationBoundaryCallback(val requestByPage: suspend () -> Unit,
      */
     override fun onItemAtEndLoaded(itemAtEnd: Organization) {
         coroutineScope.launch {
-            requestByPage()
+            requestByPage(false)
         }
     }
 }

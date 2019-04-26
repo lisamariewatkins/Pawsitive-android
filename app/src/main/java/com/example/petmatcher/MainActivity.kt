@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.example.petmatcher.networkutil.ConnectivityLiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
@@ -70,18 +69,28 @@ class MainActivity: AppCompatActivity(), HasSupportFragmentInjector {
 
         // Whenever the selected controller changes, setup the action bar.
         controller.observe(this, Observer { navController ->
-            setupActionBarWithNavController(navController)
+            setupActionBarWithNavController(this, navController)
         })
         currentNavController = controller
     }
 
+    /**
+     * If we lose network connection, show the user a "hey, there's no network" message for 4 seconds and then hide it.
+     */
     private fun setupConnectivityManager() {
         val connectionStatusBar = findViewById<TextView>(R.id.connection_status)
         val connectivityLiveData = ConnectivityLiveData(connectivityManager)
 
         connectivityLiveData.observe(this, Observer { network ->
             connectionStatusBar.apply {
-                visibility = if (network) View.GONE else View.VISIBLE
+                if (network) {
+                    visibility = View.GONE
+                } else {
+                    visibility = View.VISIBLE
+                    postDelayed({
+                        visibility = View.GONE
+                    }, 4000)
+                }
             }
         })
     }

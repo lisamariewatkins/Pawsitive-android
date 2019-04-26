@@ -2,11 +2,9 @@ package com.example.petmatcher.data.api.organizations
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
-// TODO: Relational database tables for Address, Photos, and Hours
 data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<Organization>,
                                     @field:Json(name = "pagination") val pagination: Pagination)
 

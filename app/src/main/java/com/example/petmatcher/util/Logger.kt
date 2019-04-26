@@ -1,10 +1,14 @@
 package com.example.petmatcher.util
 
 import android.util.Log
-import javax.inject.Singleton
+import javax.inject.Inject
 
-@Singleton
-class Logger {
+/**
+ * @author Lisa Watkins
+ *
+ * Wrapper around [Log] so we can easily mock this class in unit tests.
+ */
+class Logger @Inject constructor() {
     fun e(tag: String, message: String) {
         Log.e(tag, message)
     }

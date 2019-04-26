@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +37,7 @@ class FavoritesListAdapter: ListAdapter<Favorite, FavoritesListAdapter.Favorites
         val bundle = bundleOf(PET_ID_KEY to petId)
 
         holder.view.setOnClickListener {
-            it.findNavController().navigate(R.id.action_favoritesFragment_to_detailsFragment,
+            Navigation.findNavController(it).navigate(R.id.action_favoritesFragment_to_detailsFragment,
                 bundle)
         }
     }

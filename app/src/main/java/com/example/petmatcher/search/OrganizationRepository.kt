@@ -10,7 +10,6 @@ import com.example.petmatcher.data.OrganizationDao
 import com.example.petmatcher.networkutil.NetworkState
 import com.example.petmatcher.networkutil.Result
 import com.example.petmatcher.data.api.organizations.Organization
-import com.example.petmatcher.data.api.organizations.OrganizationJsonResponse
 import com.example.petmatcher.util.Logger
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -22,7 +21,6 @@ const val TAG = "OrganizationRepository"
 /**
  * Repository class to retrieve a list of [Organization]s from the network
  */
-// TODO: Why is the PageList jumping?
 class OrganizationRepository @Inject constructor(private val organizationService: OrganizationService,
                                                  val organizationDao: OrganizationDao,
                                                  val logger: Logger): CoroutineScope {
@@ -31,6 +29,7 @@ class OrganizationRepository @Inject constructor(private val organizationService
 
     @VisibleForTesting
     internal val networkState = MutableLiveData<NetworkState>()
+    // TODO: Account for number we have in database since we're using WorkManager
     private var lastRequestedPage = 1
 
     fun getOrganizationsWithCaching(): LiveData<Result<LiveData<PagedList<Organization>>>> {
@@ -49,7 +48,7 @@ class OrganizationRepository @Inject constructor(private val organizationService
             pagedList = livePagedList,
             networkState = networkState,
             refresh = {
-                // refresh()
+                // TODO: Remove
             },
             retry = {
                 // TODO: Implement this
@@ -60,13 +59,15 @@ class OrganizationRepository @Inject constructor(private val organizationService
         }
     }
 
-    internal suspend fun refresh() {
-        networkState.postValue(NetworkState.RUNNING)
-        lastRequestedPage = 1
-        logger.d(TAG, "Requesting to refresh organizations from " + Thread.currentThread().name)
+    internal suspend fun requestByPage(refresh: Boolean) {
+        if (refresh) {
+            networkState.postValue(NetworkState.RUNNING)
+            lastRequestedPage = 1
+        }
+
         try {
             val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
-            refreshDatabase(response)
+            if (refresh) refreshDatabase(response.organizations) else insertResultIntoDb(response.organizations)
             networkState.postValue(NetworkState.SUCCESS)
         } catch (e: Exception) {
             logger.d(TAG, "Error fetching organizations " + e.localizedMessage)
@@ -74,35 +75,19 @@ class OrganizationRepository @Inject constructor(private val organizationService
         }
     }
 
-    internal suspend fun requestByPage() {
-        logger.d(TAG, "Requesting organizations from " + Thread.currentThread().name)
-        try {
-            val response = organizationService.getOrganizationsByPageAsync(lastRequestedPage++).await()
-            insertResultIntoDb(response)
-        } catch (e: Exception) {
-            logger.d(TAG, "Error fetching organizations " + e.localizedMessage)
+    private suspend fun refreshDatabase(organizations: List<Organization>) {
+        withContext(Dispatchers.IO) {
+            organizationDao.deleteAllOrganizations()
+            insertResultIntoDb(organizations)
         }
     }
 
-    private suspend fun refreshDatabase(body: OrganizationJsonResponse?) {
-        body?.organizations?.let {
-            withContext(Dispatchers.IO) {
-                logger.d(TAG, "Refreshing organizations in database from " + Thread.currentThread().name)
-                organizationDao.deleteAllOrganizations()
-                insertResultIntoDb(body)
-            }
-        }
-    }
-
-    private suspend fun insertResultIntoDb(body: OrganizationJsonResponse?) {
-        body?.organizations?.let { organizations ->
-            withContext(Dispatchers.IO) {
-                logger.d(TAG, "Inserting organizations in database from " + Thread.currentThread().name)
-                try {
-                    organizationDao.insert(organizations)
-                } catch (e: Exception) {
-                    logger.d(TAG, e.localizedMessage)
-                }
+    suspend fun insertResultIntoDb(organizations: List<Organization>) {
+        withContext(Dispatchers.IO) {
+            try {
+                organizationDao.insert(organizations)
+            } catch (e: Exception) {
+                logger.d(TAG, e.localizedMessage)
             }
         }
     }
