@@ -1,7 +1,7 @@
 package com.example.network.organizations
 
 import com.example.network.RetrofitFactoryV2
-import com.example.petmatcher.data.api.organizations.OrganizationJsonResponse
+import com.example.network.organizations.OrganizationJsonResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query

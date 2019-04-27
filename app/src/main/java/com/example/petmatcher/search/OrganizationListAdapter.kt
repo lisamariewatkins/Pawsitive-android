@@ -7,7 +7,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petmatcher.R
-import com.example.petmatcher.data.api.organizations.Organization
+import com.example.network.organizations.Organization
 import kotlinx.android.synthetic.main.shelter_list_item.view.*
 
 class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>(OrganizationDiffCallback()) {
@@ -41,6 +41,6 @@ class OrganizationDiffCallback : DiffUtil.ItemCallback<Organization>() {
      * content has changed.
      */
     override fun areContentsTheSame(oldItem: Organization, newItem: Organization): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem.name == newItem.name && oldItem.id == newItem.id
     }
 }

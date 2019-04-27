@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.network.animals.Animal
 import com.example.petmatcher.R
 import com.example.petmatcher.favorites.FavoritesRepository
-import com.example.petmatcher.networkutil.NetworkState
+import com.example.network.NetworkState
 import com.example.petmatcher.imageutil.ImageCache
 import com.example.petmatcher.imageutil.ImageLoader
 import kotlinx.coroutines.*

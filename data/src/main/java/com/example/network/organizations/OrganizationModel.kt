@@ -1,4 +1,4 @@
-package com.example.petmatcher.data.api.organizations
+package com.example.network.organizations
 
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<Organization>,
-                                    @field:Json(name = "pagination") val pagination: Pagination)
+                                    @field:Json(name = "pagination") val pagination: Pagination
+)
 
 /**
  * @author Lisa Watkins
@@ -65,9 +66,11 @@ data class Pagination(@field:Json(name = "count_per_page") val countPerPage: Int
                       @field:Json(name = "total_count") val totalCount: Int,
                       @field:Json(name = "current_page") val currentPage: Int,
                       @field:Json(name = "total_pages") val totalPages: Int,
-                      @field:Json(name = "_links") val links: Links)
+                      @field:Json(name = "_links") val links: Links
+)
 
 data class Links(@field:Json(name = "previous") val previous: Link,
-                 @field:Json(name = "next") val next: Link)
+                 @field:Json(name = "next") val next: Link
+)
 
 data class Link(@field:Json(name = "href") val href: String)

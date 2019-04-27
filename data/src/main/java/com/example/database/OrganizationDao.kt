@@ -1,11 +1,11 @@
-package com.example.petmatcher.data
+package com.example.database
 
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.petmatcher.data.api.organizations.Organization
+import com.example.network.organizations.Organization
 
 /**
  * @author Lisa Watkins

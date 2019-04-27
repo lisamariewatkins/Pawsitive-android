@@ -2,8 +2,8 @@ package com.example.petmatcher.favorites
 
 import android.util.Log
 import com.example.network.animals.Animal
-import com.example.petmatcher.data.Favorite
-import com.example.petmatcher.data.FavoriteDao
+import com.example.database.Favorite
+import com.example.database.FavoriteDao
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import java.lang.Exception

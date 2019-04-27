@@ -1,4 +1,4 @@
-package com.example.petmatcher.data
+package com.example.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

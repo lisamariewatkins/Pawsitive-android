@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
-import com.example.petmatcher.data.Favorite
+import com.example.database.Favorite
 import javax.inject.Inject
 
 

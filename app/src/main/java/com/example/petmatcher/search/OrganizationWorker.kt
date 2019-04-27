@@ -23,7 +23,7 @@ class OrganizationWorker @Inject constructor(
     override suspend fun doWork(): Result {
         return try {
             val result = organizationService.getOrganizationsAsync().await()
-            organizationRepository.insertResultIntoDb(result.organizations)
+            organizationRepository.saveOrganizations(result.organizations)
             Result.success()
         } catch (e: Exception) {
             Result.failure()

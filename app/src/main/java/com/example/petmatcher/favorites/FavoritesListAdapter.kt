@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petmatcher.R
-import com.example.petmatcher.data.Favorite
+import com.example.database.Favorite
 import kotlinx.android.synthetic.main.favorites_list_item.view.*
 
 /**

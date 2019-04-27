@@ -52,7 +52,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 dependencies {
-    implementation project(":network")
+    implementation project(':data')
 
     // Jetpack Kotlin Extensions
     implementation "androidx.core:core-ktx:1.0.1"

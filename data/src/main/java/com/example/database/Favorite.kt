@@ -1,4 +1,4 @@
-package com.example.petmatcher.data
+package com.example.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

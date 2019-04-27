@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.petmatcher.DI.Injectable
 import com.example.petmatcher.R
-import com.example.petmatcher.data.api.organizations.Organization
+import com.example.network.organizations.Organization
 import javax.inject.Inject
 
 

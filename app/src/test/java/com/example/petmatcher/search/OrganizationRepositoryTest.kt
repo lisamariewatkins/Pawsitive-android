@@ -2,11 +2,11 @@ package com.example.petmatcher.search
 
 import androidx.paging.PageKeyedDataSource
 import com.example.network.organizations.OrganizationService
-import com.example.petmatcher.data.OrganizationDao
-import com.example.petmatcher.data.api.organizations.Organization
+import com.example.database.OrganizationDao
+import com.example.network.organizations.Organization
 import com.example.petmatcher.data.generateListOfMockOrganizations
 import com.example.petmatcher.data.generateMockOrganizationJsonResponse
-import com.example.petmatcher.networkutil.NetworkState
+import com.example.network.NetworkState
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import com.example.petmatcher.util.Logger
 import io.mockk.*
@@ -49,7 +49,7 @@ class OrganizationRepositoryTest {
         } returns MockDataSourceFactory()
 
         // Exercise
-        organizationRepository.getOrganizationsWithCaching().observeForever { result ->
+        organizationRepository.getOrganizations().observeForever { result ->
             result.pagedList.observeForever {pagedListOfOrganizations ->
                 // Assert
                 Assert.assertEquals(pagedListOfOrganizations.size, 10)

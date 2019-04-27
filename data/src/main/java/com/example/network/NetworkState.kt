@@ -1,4 +1,4 @@
-package com.example.petmatcher.networkutil
+package com.example.network
 
 enum class ErrorState {
     NO_NETWORK,

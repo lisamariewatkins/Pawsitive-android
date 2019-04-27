@@ -1,5 +1,7 @@
 package com.example.petmatcher.data
 
+import com.example.database.api.organizations.*
+import com.example.network.organizations.*
 import com.example.petmatcher.data.api.organizations.*
 
 fun generateMockOrganizationJsonResponse(): OrganizationJsonResponse {
@@ -48,8 +50,10 @@ fun generateListOfMockOrganizations(size: Int): List<Organization> {
                 "city",
                 "state",
                 "postcode",
-                "country"),
+                "country"
+            ),
             url = "url",
-            website = "website")
+            website = "website"
+        )
     }
 }

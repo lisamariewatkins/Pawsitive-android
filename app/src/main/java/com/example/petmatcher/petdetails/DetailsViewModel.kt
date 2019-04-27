@@ -2,14 +2,13 @@ package com.example.petmatcher.petdetails
 
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.petmatcher.data.Favorite
+import com.example.database.Favorite
 import com.example.petmatcher.favorites.FavoritesRepository
 import com.example.petmatcher.imageutil.ImageCache
 import com.example.petmatcher.imageutil.ImageLoader
-import com.example.petmatcher.networkutil.ErrorState
+import com.example.network.ErrorState
 import javax.inject.Inject
 
 /**
