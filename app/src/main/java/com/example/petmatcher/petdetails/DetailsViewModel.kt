@@ -2,13 +2,14 @@ package com.example.petmatcher.petdetails
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.database.Favorite
 import com.example.petmatcher.favorites.FavoritesRepository
 import com.example.petmatcher.imageutil.ImageCache
 import com.example.petmatcher.imageutil.ImageLoader
-import com.example.network.ErrorState
+import com.example.network.util.ErrorState
 import javax.inject.Inject
 
 /**
@@ -19,7 +20,10 @@ class DetailsViewModel @Inject constructor(private val favoritesRepository: Favo
                                            private val imageCache: ImageCache)
     : ViewModel() {
 
-    val errorState = MutableLiveData<ErrorState>()
+    private val _errorState = MutableLiveData<ErrorState>()
+
+    val errorState: LiveData<ErrorState>
+        get() = _errorState
 
     fun getPet(id: Int) = favoritesRepository.getFavorite(id)
 
@@ -33,7 +37,7 @@ class DetailsViewModel @Inject constructor(private val favoritesRepository: Favo
                 imageUrl = favorite.imageUrl,
                 imageView = petImageView)
         } ?: run {
-            errorState.value = ErrorState.UNKNOWN
+            _errorState.value = ErrorState.UNKNOWN
         }
     }
 

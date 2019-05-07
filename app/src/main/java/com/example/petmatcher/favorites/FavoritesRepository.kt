@@ -1,7 +1,7 @@
 package com.example.petmatcher.favorites
 
 import android.util.Log
-import com.example.network.animals.Animal
+import com.example.models.Animal
 import com.example.database.Favorite
 import com.example.database.FavoriteDao
 import kotlinx.coroutines.Dispatchers.IO

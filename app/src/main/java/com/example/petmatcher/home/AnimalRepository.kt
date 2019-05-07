@@ -1,8 +1,8 @@
 package com.example.petmatcher.home
 
 import android.util.Log
-import com.example.network.animals.AnimalJsonResponse
-import com.example.network.animals.AnimalService
+import com.example.models.AnimalJsonResponse
+import com.example.network.AnimalService
 import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 import javax.inject.Singleton

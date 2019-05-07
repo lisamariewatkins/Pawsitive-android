@@ -2,7 +2,6 @@ package com.example.network
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import com.example.network.petfinderauth.PetFinderAuthService
 import com.example.network.secret.Key
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.*

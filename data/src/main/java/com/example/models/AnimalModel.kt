@@ -1,4 +1,4 @@
-package com.example.network.animals
+package com.example.models
 
 import com.squareup.moshi.Json
 
@@ -20,11 +20,12 @@ data class Animal(@field:Json(name = "id") val id: Int,
                   @field:Json(name = "tags") val tags: List<String>,
                   @field:Json(name = "name") val name: String,
                   @field:Json(name = "description") val description: String,
-                  @field:Json(name = "photos") val photos: List<Photo>,
+                  @field:Json(name = "photos") val photos: List<com.example.models.organization.Photo>,
                   @field:Json(name = "status") val status: String,
                   @field:Json(name = "published_at") val publishedAt: String,
                   @field:Json(name = "contact") val contact: Contact,
-                  @field:Json(name = "pagination") val pagination: Pagination)
+                  @field:Json(name = "pagination") val pagination: com.example.models.organization.Pagination
+)
 
 data class Breeds(@field:Json(name = "primary") val primary: String,
                   @field:Json(name = "secondary") val secondary: String?,
@@ -51,7 +52,8 @@ data class Photo(@field:Json(name = "small") val small: String,
 
 data class Contact(@field:Json(name = "email") val email: String,
                    @field:Json(name = "phone") val phone: String,
-                   @field:Json(name = "address") val address: Address)
+                   @field:Json(name = "address") val address: com.example.models.organization.Address
+)
 
 data class Address(@field:Json(name = "address1") val address1: String,
                    @field:Json(name = "address2") val address2: String,
@@ -64,9 +66,11 @@ data class Pagination(@field:Json(name = "count_per_page") val countPerPage: Int
                       @field:Json(name = "total_count") val totalCount: Int,
                       @field:Json(name = "current_page") val currentPage: Int,
                       @field:Json(name = "total_pages") val totalPages: Int,
-                      @field:Json(name = "_links") val links: Links)
+                      @field:Json(name = "_links") val links: com.example.models.organization.Links
+)
 
-data class Links(@field:Json(name = "previous") val previous: Link,
-                 @field:Json(name = "next") val next: Link)
+data class Links(@field:Json(name = "previous") val previous: com.example.models.organization.Link,
+                 @field:Json(name = "next") val next: com.example.models.organization.Link
+)
 
 data class Link(@field:Json(name = "href") val href: String)

@@ -1,4 +1,4 @@
-package com.example.network.petfinderauth
+package com.example.models
 
 import com.squareup.moshi.Json
 

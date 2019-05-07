@@ -1,12 +1,12 @@
-package com.example.network.organizations
+package com.example.models.organization
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
-data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<Organization>,
-                                    @field:Json(name = "pagination") val pagination: Pagination
+data class OrganizationJsonResponse(@field:Json(name = "organizations") val organizations: List<com.example.models.organization.Organization>,
+                                    @field:Json(name = "pagination") val pagination: com.example.models.organization.Pagination
 )
 
 /**
@@ -23,12 +23,12 @@ data class Organization(
     @field:Json(name = "email") val email: String?,
     @field:Json(name = "phone") val phone: String?,
     @Embedded
-    @field:Json(name = "address") val address: Address?,
+    @field:Json(name = "address") val address: com.example.models.organization.Address?,
     @Embedded
-    @field:Json(name = "hours") val hours: Hours?,
+    @field:Json(name = "hours") val hours: com.example.models.organization.Hours?,
     @field:Json(name = "url") val url: String?,
     @Embedded
-    @field:Json(name = "social_media") val socialMedia: SocialMedia?,
+    @field:Json(name = "social_media") val socialMedia: com.example.models.organization.SocialMedia?,
     @field:Json(name = "website") val website: String?,
     @field:Json(name = "mission_statement") val missionStatement: String?)
 
@@ -66,11 +66,11 @@ data class Pagination(@field:Json(name = "count_per_page") val countPerPage: Int
                       @field:Json(name = "total_count") val totalCount: Int,
                       @field:Json(name = "current_page") val currentPage: Int,
                       @field:Json(name = "total_pages") val totalPages: Int,
-                      @field:Json(name = "_links") val links: Links
+                      @field:Json(name = "_links") val links: com.example.models.organization.Links
 )
 
-data class Links(@field:Json(name = "previous") val previous: Link,
-                 @field:Json(name = "next") val next: Link
+data class Links(@field:Json(name = "previous") val previous: com.example.models.organization.Link,
+                 @field:Json(name = "next") val next: com.example.models.organization.Link
 )
 
 data class Link(@field:Json(name = "href") val href: String)

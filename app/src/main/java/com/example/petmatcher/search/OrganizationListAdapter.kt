@@ -7,7 +7,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.petmatcher.R
-import com.example.network.organizations.Organization
+import com.example.models.organization.Organization
 import kotlinx.android.synthetic.main.shelter_list_item.view.*
 
 class OrganizationListAdapter: PagedListAdapter<Organization, OrganizationListAdapter.OrganizationViewHolder>(OrganizationDiffCallback()) {

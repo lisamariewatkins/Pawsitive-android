@@ -1,7 +1,6 @@
-package com.example.network.organizations
+package com.example.network
 
-import com.example.network.RetrofitFactoryV2
-import com.example.network.organizations.OrganizationJsonResponse
+import com.example.models.organization.OrganizationJsonResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query

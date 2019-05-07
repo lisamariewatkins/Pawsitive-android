@@ -1,4 +1,4 @@
-package com.example.network
+package com.example.network.util
 
 enum class CachingPolicy(val settings: String) {
     SHELTER_POLICY("public,max-age=2592000"),

@@ -3,6 +3,7 @@ package com.example.petmatcher.imageutil
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -25,16 +26,21 @@ class ImageLoader @Inject constructor(val context: Context) {
     /**
      * Load image into [ImageView] with optional placeholder and error images
      */
-    fun loadImageIntoView(url: String, imageView: ImageView, placeholderId: Int? = null, errorImageId: Int? = null) {
-        if (placeholderId != null && errorImageId != null) {
-            val options = RequestOptions()
-                .centerCrop()
-                .placeholder(placeholderId)
-                .error(errorImageId)
+    fun loadImageIntoView(url: String, imageView: ImageView) {
+        val circularProgressDrawable = createImageLoadingSpinner()
 
-            Glide.with(context).load(url).apply(options).into(imageView)
-        } else {
-            Glide.with(context).load(url).into(imageView)
+        val options = RequestOptions()
+            .centerCrop()
+            .placeholder(circularProgressDrawable)
+
+        Glide.with(context).load(url).apply(options).into(imageView)
+    }
+
+    private fun createImageLoadingSpinner(): CircularProgressDrawable {
+        return CircularProgressDrawable(context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
         }
     }
 }

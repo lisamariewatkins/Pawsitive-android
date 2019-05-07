@@ -7,8 +7,9 @@ import android.widget.ProgressBar
 import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.example.petmatcher.R
-import com.example.network.NetworkState
-import com.example.network.organizations.Organization
+import com.example.network.util.NetworkState
+import com.example.models.organization.Organization
+import kotlinx.coroutines.newCoroutineContext
 import javax.inject.Inject
 
 const val organizationWorker = "OrganizationWorker"
@@ -21,7 +22,8 @@ const val organizationWorker = "OrganizationWorker"
  * retransmitted by the switch-mapped [LiveData], while removing the previous [LiveData] source.
  *
  */
-class OrganizationSearchViewModel @Inject constructor(private val organizationRepository: OrganizationRepository)
+class OrganizationSearchViewModel @Inject constructor(
+    private val organizationRepository: OrganizationRepository)
     : ViewModel() {
 
     private val repoResult = organizationRepository.getOrganizations()
@@ -78,7 +80,7 @@ class OrganizationSearchViewModel @Inject constructor(private val organizationRe
     }
 
     override fun onCleared() {
-        organizationRepository.clear()
+        organizationRepository.onCleared()
         super.onCleared()
     }
 }

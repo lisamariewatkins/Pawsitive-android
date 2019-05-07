@@ -1,4 +1,4 @@
-package com.example.network
+package com.example.network.util
 
 enum class ErrorState {
     NO_NETWORK,

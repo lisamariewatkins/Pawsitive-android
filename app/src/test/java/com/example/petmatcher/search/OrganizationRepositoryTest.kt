@@ -1,12 +1,12 @@
 package com.example.petmatcher.search
 
 import androidx.paging.PageKeyedDataSource
-import com.example.network.organizations.OrganizationService
+import com.example.network.OrganizationService
 import com.example.database.OrganizationDao
-import com.example.network.organizations.Organization
+import com.example.models.organization.Organization
 import com.example.petmatcher.data.generateListOfMockOrganizations
 import com.example.petmatcher.data.generateMockOrganizationJsonResponse
-import com.example.network.NetworkState
+import com.example.network.util.NetworkState
 import com.example.petmatcher.testextensions.InstantExecutorExtension
 import com.example.petmatcher.util.Logger
 import io.mockk.*
@@ -130,8 +130,8 @@ class OrganizationRepositoryTest {
     /**
      * Mock factory to be returned by mock DAO
      */
-    class MockDataSourceFactory: androidx.paging.DataSource.Factory<Int, Organization>() {
-        override fun create(): androidx.paging.DataSource<Int, Organization> {
+    class MockDataSourceFactory: androidx.paging.DataSource.Factory<Int, com.example.models.organization.Organization>() {
+        override fun create(): androidx.paging.DataSource<Int, com.example.models.organization.Organization> {
             return MockDataSource()
         }
     }
@@ -139,16 +139,16 @@ class OrganizationRepositoryTest {
     /**
      * Mock data source that returns a list of 10 organizations
      */
-    class MockDataSource: PageKeyedDataSource<Int, Organization>() {
-        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Organization>) {
+    class MockDataSource: PageKeyedDataSource<Int, com.example.models.organization.Organization>() {
+        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, com.example.models.organization.Organization>) {
             callback.onResult(generateListOfMockOrganizations(10), null, null)
         }
 
-        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Organization>) {
+        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, com.example.models.organization.Organization>) {
             // not needed
         }
 
-        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Organization>) {
+        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, com.example.models.organization.Organization>) {
             // not needed
         }
     }

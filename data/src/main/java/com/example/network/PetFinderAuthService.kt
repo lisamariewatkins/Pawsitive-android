@@ -1,5 +1,6 @@
-package com.example.network.petfinderauth
+package com.example.network
 
+import com.example.models.PetFinderAuthResponse
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

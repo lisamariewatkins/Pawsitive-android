@@ -1,4 +1,4 @@
-package com.example.network
+package com.example.network.util
 
 data class Result<T>(
     val pagedList: T,

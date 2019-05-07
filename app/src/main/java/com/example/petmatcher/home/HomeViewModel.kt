@@ -4,13 +4,14 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.network.animals.Animal
+import com.example.models.Animal
 import com.example.petmatcher.R
 import com.example.petmatcher.favorites.FavoritesRepository
-import com.example.network.NetworkState
+import com.example.network.util.NetworkState
 import com.example.petmatcher.imageutil.ImageCache
 import com.example.petmatcher.imageutil.ImageLoader
 import kotlinx.coroutines.*
@@ -25,8 +26,13 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
                                         private val imageCache: ImageCache,
                                         private val imageLoader: ImageLoader
 ): ViewModel() {
-    val currentAnimal = MutableLiveData<Animal>()
-    val networkState = MutableLiveData<NetworkState>()
+    private val _currentAnimal = MutableLiveData<Animal>()
+    val currentAnimal: LiveData<Animal>
+        get() = _currentAnimal
+
+    private val _networkState = MutableLiveData<NetworkState>()
+    val networkState: LiveData<NetworkState>
+        get() = _networkState
 
     @VisibleForTesting
     internal val animalList = LinkedList<Animal>()
@@ -40,7 +46,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
     //region I/O
     fun nextAnimal() {
         if (animalList.isNotEmpty()) {
-            currentAnimal.value = animalList.pollFirst()
+            _currentAnimal.value = animalList.pollFirst()
         } else {
             loadAnimals()
         }
@@ -54,7 +60,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
 
     private fun loadAnimals() {
         viewModelScope.launch {
-            networkState.postValue(NetworkState.RUNNING)
+            _networkState.postValue(NetworkState.RUNNING)
             loadAnimalsAsync()
         }
     }
@@ -66,13 +72,13 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
             // cache pets
             animalList.addAll(animalResponse.animals)
             // update current pet
-            currentAnimal.postValue(animalList.pollFirst())
+            _currentAnimal.postValue(animalList.pollFirst())
             // cache images
             imageCache.cacheImages(animalList)
             // update network state
-            networkState.postValue(NetworkState.SUCCESS)
+            _networkState.postValue(NetworkState.SUCCESS)
         } catch (e: Exception) {
-            networkState.postValue(NetworkState.FAILURE)
+            _networkState.postValue(NetworkState.FAILURE)
             Log.e("HomeViewModel", e.message)
         }
     }
@@ -125,9 +131,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
         } ?: run {
             imageLoader.loadImageIntoView(
                 url = imageUrl,
-                imageView = petImageView,
-                placeholderId = R.drawable.ic_placeholder_image,
-                errorImageId = R.drawable.ic_placeholder_image)
+                imageView = petImageView)
         }
     }
     //endregion

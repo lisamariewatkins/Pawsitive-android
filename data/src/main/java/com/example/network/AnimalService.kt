@@ -1,9 +1,8 @@
-package com.example.network.animals
+package com.example.network
 
-import com.example.network.RetrofitFactoryV2
+import com.example.models.AnimalJsonResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface AnimalService {
     @GET("/v2/animals")

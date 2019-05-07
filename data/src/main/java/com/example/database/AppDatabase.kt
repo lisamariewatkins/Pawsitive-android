@@ -2,7 +2,7 @@ package com.example.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.network.organizations.Organization
+import com.example.models.organization.Organization
 
 /**
  * @author Lisa Watkins
@@ -14,7 +14,7 @@ import com.example.network.organizations.Organization
  * one instance is created for the app's process.
  */
 // TODO: Singleton pattern
-@Database(entities = [Favorite::class, Organization::class], version = 1)
+@Database(entities = [Favorite::class, com.example.models.organization.Organization::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun organizationDao(): OrganizationDao

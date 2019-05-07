@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.network.organizations.Organization
+import com.example.models.organization.Organization
 
 /**
  * @author Lisa Watkins
@@ -21,10 +21,10 @@ import com.example.network.organizations.Organization
 @Dao
 interface OrganizationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(organizations: List<Organization>)
+    fun insert(organizations: List<com.example.models.organization.Organization>)
 
     @Query("SELECT * FROM organizations")
-    fun getAllOrganizations(): DataSource.Factory<Int, Organization>
+    fun getAllOrganizations(): DataSource.Factory<Int, com.example.models.organization.Organization>
 
     @Query("DELETE FROM organizations")
     fun deleteAllOrganizations()

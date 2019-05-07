@@ -3,18 +3,18 @@ package com.example.petmatcher.DI
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import androidx.room.Room
 import com.example.network.RetrofitFactoryV2
-import com.example.network.animals.AnimalService
-import com.example.network.animals.AnimalServiceImpl
-import com.example.network.organizations.OrganizationService
-import com.example.network.organizations.OrganizationServiceImpl
+import com.example.network.AnimalService
+import com.example.network.AnimalServiceImpl
+import com.example.network.OrganizationService
+import com.example.network.OrganizationServiceImpl
 import com.example.petmatcher.BaseApplication
 import com.example.database.AppDatabase
 import com.example.database.FavoriteDao
 import com.example.database.OrganizationDao
-import com.example.petmatcher.imageutil.ImageLoader
-import com.example.petmatcher.util.Logger
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -29,8 +29,7 @@ import javax.inject.Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
     ApplicationModule::class,
-    ActivityModule::class,
-    WorkerBindingModule::class]
+    ActivityModule::class]
 )
 interface ApplicationComponent {
     /**

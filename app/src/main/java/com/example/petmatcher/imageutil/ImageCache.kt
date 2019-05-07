@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable
 import android.util.LruCache
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.network.animals.Animal
+import com.example.models.Animal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
