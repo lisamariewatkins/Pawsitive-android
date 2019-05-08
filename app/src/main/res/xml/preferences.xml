@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+            app:key="notifications_category"
+            app:title="Notifications">
+
+        <SwitchPreferenceCompat
+                app:key="notifications"
+                app:title="Enable message notifications"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:key="pet_filter_category"
+            app:title="Filters">
+
+        <EditTextPreference
+                app:key="location"
+                app:title="Location"/>
+
+        <SeekBarPreference
+                app:key="distance"
+                app:title="Distance"
+                android:max="500"/>
+
+        <MultiSelectListPreference
+                app:key="gender"
+                app:title="Gender"
+                android:entries="@array/gender"
+                android:entryValues="@array/gender"/>
+
+        <MultiSelectListPreference
+                app:key="age"
+                app:title="Age"
+                android:entries="@array/age"
+                android:entryValues="@array/age"/>
+
+        <MultiSelectListPreference
+                app:key="size"
+                app:title="Size"
+                android:entries="@array/size"
+                android:entryValues="@array/size"/>
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

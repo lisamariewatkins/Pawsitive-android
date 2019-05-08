@@ -109,6 +109,9 @@ dependencies {
     // Android X
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    // Preferences
+    implementation "androidx.preference:preference-ktx:1.1.0-alpha05"
+
     // Unit Tests
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.1$junit_version"

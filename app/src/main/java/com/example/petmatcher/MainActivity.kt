@@ -57,7 +57,7 @@ class MainActivity: AppCompatActivity(), HasSupportFragmentInjector {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
         /** order matters **/
-        val navGraphIds = listOf(R.navigation.home, R.navigation.favorites, R.navigation.shelters)
+        val navGraphIds = listOf(R.navigation.home, R.navigation.favorites, R.navigation.shelters, R.navigation.settings)
 
         // Setup the bottom navigation view with a list of navigation graphs
         val controller = bottomNavigationView.setupWithNavController(
