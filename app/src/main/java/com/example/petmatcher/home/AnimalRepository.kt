@@ -14,8 +14,8 @@ import javax.inject.Singleton
 class AnimalRepository @Inject constructor(private val animalService: AnimalService) {
 
     /** Retrieve a list of animals asynchronously from the network **/
-    fun getAnimalsAsync(): Deferred<AnimalJsonResponse> {
+    fun getAnimalsAsync(page: Int): Deferred<AnimalJsonResponse> {
         Log.d("AnimalRepo", "Launching network request from " + Thread.currentThread().name)
-        return animalService.getAnimalsAsync()
+        return animalService.getAnimalsAsync(page)
     }
 }

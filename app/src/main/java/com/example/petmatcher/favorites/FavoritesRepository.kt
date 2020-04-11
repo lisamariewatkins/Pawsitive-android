@@ -10,7 +10,6 @@ import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteDao) {
 
     suspend fun addToFavorites(newPet: Animal) {
@@ -19,7 +18,7 @@ class FavoritesRepository @Inject constructor(private val favoriteDao: FavoriteD
             newPet.name,
             newPet.description,
             newPet.type,
-            newPet.photos?.get(0)?.large!!
+            newPet.photos.getOrNull(0)?.large
         )
 
         withContext(IO) {

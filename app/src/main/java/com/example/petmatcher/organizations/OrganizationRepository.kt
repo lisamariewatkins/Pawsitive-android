@@ -1,12 +1,9 @@
-package com.example.petmatcher.search
+package com.example.petmatcher.organizations
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.example.network.OrganizationService
 import com.example.database.OrganizationDao
 import com.example.network.util.NetworkState
@@ -14,10 +11,8 @@ import com.example.network.util.Result
 import com.example.models.organization.Organization
 import com.example.petmatcher.util.Logger
 import com.example.petmatcher.util.WithDefaultCoroutineScope
-import com.example.repository.OrganizationRepository
 import kotlinx.coroutines.*
 import java.lang.Exception
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 const val TAG = "OrganizationRepository"
@@ -31,7 +26,6 @@ class OrganizationRepository @Inject constructor(private val organizationService
     : WithDefaultCoroutineScope {
 
     val networkState = MutableLiveData<NetworkState>()
-    // TODO: Account for number we have in database since we're using WorkManager
     private var lastRequestedPage = 1
 
     fun getOrganizations(): LiveData<Result<LiveData<PagedList<Organization>>>> {

@@ -1,9 +1,8 @@
-package com.example.petmatcher.search
+package com.example.petmatcher.organizations
 
 import androidx.paging.PageKeyedDataSource
 import com.example.network.OrganizationService
 import com.example.database.OrganizationDao
-import com.example.models.organization.Organization
 import com.example.petmatcher.data.generateListOfMockOrganizations
 import com.example.petmatcher.data.generateMockOrganizationJsonResponse
 import com.example.network.util.NetworkState

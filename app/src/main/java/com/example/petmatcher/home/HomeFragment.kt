@@ -55,6 +55,7 @@ class HomeFragment: Fragment(), Injectable {
 
         matchButton.setOnClickListener {
             viewModel.addCurrentAnimalToFavorites()
+            viewModel.nextAnimal()
         }
 
         return view

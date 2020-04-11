@@ -37,6 +37,8 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
     @VisibleForTesting
     internal val animalList = LinkedList<Animal>()
 
+    private var page = 1
+
     init {
         if (animalList.isEmpty()) {
             loadAnimals()
@@ -68,7 +70,7 @@ class HomeViewModel @Inject constructor(private val animalRepository: AnimalRepo
     // TODO: Revisit error handling
     private suspend fun loadAnimalsAsync() = withContext(Dispatchers.Default) {
         try {
-            val animalResponse = animalRepository.getAnimalsAsync().await()
+            val animalResponse = animalRepository.getAnimalsAsync(page++).await()
             // cache pets
             animalList.addAll(animalResponse.animals)
             // update current pet

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.petmatcher.favorites.FavoritesViewModel
 import com.example.petmatcher.home.HomeViewModel
 import com.example.petmatcher.petdetails.DetailsViewModel
-import com.example.petmatcher.search.OrganizationSearchViewModel
+import com.example.petmatcher.organizations.OrganizationSearchViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

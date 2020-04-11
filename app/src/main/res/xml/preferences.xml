@@ -8,7 +8,8 @@
 
         <SwitchPreferenceCompat
                 app:key="notifications"
-                app:title="Enable message notifications"/>
+                app:title="Enable message notifications"
+                android:icon="@drawable/ic_notification"/>
 
     </PreferenceCategory>
 
@@ -18,7 +19,8 @@
 
         <EditTextPreference
                 app:key="location"
-                app:title="Location"/>
+                app:title="Location"
+                android:icon="@drawable/ic_location"/>
 
         <SeekBarPreference
                 app:key="distance"

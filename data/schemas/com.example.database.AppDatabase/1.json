@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7a9178ee712addea826b1bcbae88a986",
+    "identityHash": "31e2aaa117f6ec1f782bb95573d8133e",
     "entities": [
       {
         "tableName": "Favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`petId` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `breed` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, PRIMARY KEY(`petId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`petId` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `breed` TEXT NOT NULL, `imageUrl` TEXT, PRIMARY KEY(`petId`))",
         "fields": [
           {
             "fieldPath": "petId",
@@ -36,7 +36,7 @@
             "fieldPath": "imageUrl",
             "columnName": "imageUrl",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -216,7 +216,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7a9178ee712addea826b1bcbae88a986\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"31e2aaa117f6ec1f782bb95573d8133e\")"
     ]
   }
 }

@@ -32,10 +32,16 @@ class DetailsViewModel @Inject constructor(private val favoritesRepository: Favo
             petNameTextView.text = favorite.name
             petDescriptionTextView.text = favorite.description
 
-            loadImage(
-                petId = favorite.petId,
-                imageUrl = favorite.imageUrl,
-                imageView = petImageView)
+            val imageUrl = favorite.imageUrl
+
+            if (imageUrl != null) {
+                loadImage(
+                    petId = favorite.petId,
+                    imageUrl = imageUrl,
+                    imageView = petImageView
+                )
+            }
+
         } ?: run {
             _errorState.value = ErrorState.UNKNOWN
         }

@@ -1,4 +1,4 @@
-package com.example.petmatcher.search
+package com.example.petmatcher.organizations
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

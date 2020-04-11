@@ -4,6 +4,6 @@
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/settings"
             app:startDestination="@id/settingsFragment">
 
-    <fragment android:id="@+id/settingsFragment" android:name="com.example.petmatcher.SettingsFragment"
+    <fragment android:id="@+id/settingsFragment" android:name="com.example.petmatcher.preferences.SettingsFragment"
               android:label="Settings" tools:layout="@layout/fragment_settings"/>
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.petmatcher.search
+package com.example.petmatcher.organizations
 
 import android.view.View
 import android.widget.FrameLayout
@@ -9,10 +9,7 @@ import androidx.paging.PagedList
 import com.example.petmatcher.R
 import com.example.network.util.NetworkState
 import com.example.models.organization.Organization
-import kotlinx.coroutines.newCoroutineContext
 import javax.inject.Inject
-
-const val organizationWorker = "OrganizationWorker"
 
 /**
  * @author Lisa Watkins
